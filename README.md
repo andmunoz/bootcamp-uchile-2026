@@ -19,3 +19,7 @@ Yo te recomiendo hacer un "fork" ya que tendrás las actualizaciones del código
 **Importante**: Si crees que puedes mejorar un código y deseas que el profesor lo actualice para el resto de los estudiantes, haz un pull request para que pueda ser revisado y aprobado. Esto es importante para que todos podamos aprender a desarrollar aplicaciones móviles con Kotlin, JetPack y KMP.
 
 Con ésto, ya podrás revisar las líneas de código. Recuerda que puedes conectar el repositorio para luego manipularlo directamente desde el mismo Android Studio.
+
+## Más Información
+
+Toda la documentación del Repositorio la estoy generando en el Wiki al cual puedes acceder por [AQUI](https://github.com/andmunoz/bootcamp-uchile-2026/wiki).
