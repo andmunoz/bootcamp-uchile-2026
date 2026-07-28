@@ -48,6 +48,9 @@ class MainActivity : ComponentActivity() {
 fun PeopleCounter(modifier: Modifier = Modifier.Companion) {
     var nombre by remember { mutableStateOf("") }
     val personas: MutableList<String> = remember { mutableListOf() }
+    personas.add("Pedro")
+    personas.add("Juan")
+    personas.add("Diego")
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
