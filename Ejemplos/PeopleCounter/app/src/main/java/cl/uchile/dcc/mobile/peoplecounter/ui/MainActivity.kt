@@ -26,126 +26,59 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cl.uchile.dcc.mobile.peoplecounter.ui.component.DigitCounter
+import cl.uchile.dcc.mobile.peoplecounter.ui.component.MenuButton
+import cl.uchile.dcc.mobile.peoplecounter.ui.component.SubmitButton
+import cl.uchile.dcc.mobile.peoplecounter.ui.screen.PeopleCounter
+import cl.uchile.dcc.mobile.peoplecounter.ui.screen.PeopleRegistry
 import cl.uchile.dcc.mobile.peoplecounter.ui.theme.PeopleCounterTheme
+import cl.uchile.dcc.mobile.peoplecounter.viewmodel.MainScreenViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()  // Se usé la pantalla del dispositivo completa
+        val viewModel = MainScreenViewModel()
         setContent {
             PeopleCounterTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    PeopleCounter(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun PeopleCounter(modifier: Modifier = Modifier.Companion) {
-    var nombre by remember { mutableStateOf("") }
-    val personas: MutableList<String> = remember { mutableListOf() }
-    personas.add("Pedro")
-    personas.add("Juan")
-    personas.add("Diego")
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp, 0.dp)
-    ) {
-        Text(
-            text = "PEOPLE COUNTER",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(16.dp)
-        )
-        RowCounter()
-        OutlinedTextField(
-            value = nombre,
-            onValueChange = { it ->
-                nombre = it
-            },
-            label = { Text("Nombre del Asistente") },
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-        )
-        Button(
-            onClick = {
-                personas.add(nombre)
-                nombre = ""
-            },
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = "Registrar",
-                modifier = Modifier.padding(24.dp)
-            )
-        }
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            content = {
-                items(personas) { persona ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                    ) {
+                Scaffold(
+                    topBar = {
                         Text(
-                            text = persona,
-                            modifier = Modifier.padding(16.dp)
+                            text = "THEATRICAL TOOLS",
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(24.dp, 32.dp)
+                        )
+                    },
+                    bottomBar = {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp, 16.dp, 16.dp, 48.dp)
+                        ) {
+                            MenuButton(
+                                "Contador",
+                                callBack = { viewModel.changeToCounter() }
+                            )
+                            MenuButton(
+                                "Registro",
+                                callBack = { viewModel.changeToRegistry() }
+                            )
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding ->
+                    if (viewModel.actualScreen == "REGISTRY") {
+                        PeopleRegistry(
+                            modifier = Modifier.padding(innerPadding)
+                        )
+                    } else if (viewModel.actualScreen == "COUNTER") {
+                        PeopleCounter(
+                            modifier = Modifier.padding(innerPadding)
                         )
                     }
                 }
             }
-        )
-    }
-}
-
-@Composable
-fun RowCounter() {
-    Row(
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        Card() {
-            Text(
-                text = "0",
-                modifier = Modifier.padding(32.dp, 16.dp),
-                style = MaterialTheme.typography.labelLarge
-            )
-        }
-        Card() {
-            Text(
-                text = "0",
-                modifier = Modifier.padding(32.dp, 16.dp),
-                style = MaterialTheme.typography.labelLarge
-            )
-        }
-        Card() {
-            Text(
-                text = "0",
-                modifier = Modifier.padding(32.dp, 16.dp),
-                style = MaterialTheme.typography.labelLarge
-            )
         }
     }
 }
-
-/* @Preview(showBackground = true)
-@Composable
-fun PeopleCounterPreview() {
-    PeopleCounterTheme {
-        PeopleCounter()
-    }
-} */
