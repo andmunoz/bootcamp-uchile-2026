@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MenuButton(texto: String, callBack: () -> Unit) {
+fun MenuButton(texto: String, enabled: Boolean, callBack: () -> Unit) {
     Button(
         onClick = {
             callBack()
@@ -19,6 +19,7 @@ fun MenuButton(texto: String, callBack: () -> Unit) {
                 text = texto,
                 modifier = Modifier.padding(16.dp)
             )
-        }
+        },
+        enabled = enabled
     )
 }

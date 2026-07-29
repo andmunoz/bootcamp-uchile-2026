@@ -3,15 +3,9 @@ package cl.uchile.dcc.mobile.peoplecounter.ui.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,7 +22,7 @@ import cl.uchile.dcc.mobile.peoplecounter.ui.component.SubmitButton
 @Composable
 fun PeopleRegistry(modifier: Modifier = Modifier.Companion) {
     var nombre by remember { mutableStateOf("") }
-    val personas by remember { mutableStateOf( mutableListOf<PersonRegistry>()) }
+    val personas: MutableList<PersonRegistry> = mutableListOf()
     personas.add(PersonRegistry("Pedro", "28/07/2026", "12:00"))
     personas.add(PersonRegistry("Juan", "28/07/2026", "12:07"))
     personas.add(PersonRegistry("Diego", "28/07/2026", "12:15"))
@@ -42,12 +36,18 @@ fun PeopleRegistry(modifier: Modifier = Modifier.Companion) {
     ) {
         InputTextField(
             "Ingrese el nombre del asistente",
-            ""
+            value = nombre,
+            callBack = {
+                nombre = it
+            }
         )
         SubmitButton(
             "Registrar",
             callBack = {
-                personas.add(PersonRegistry(nombre, "28/07/2026", "13:00"))
+                val date = java.util.Date()
+                val fecha = date.toString().substring(0, 10)
+                val hora = date.toString().substring(11, 16)
+                personas.add(PersonRegistry(nombre, fecha, hora))
                 nombre = ""
             }
         )

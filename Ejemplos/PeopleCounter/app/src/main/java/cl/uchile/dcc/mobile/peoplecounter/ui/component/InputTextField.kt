@@ -5,20 +5,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun InputTextField(label: String, initValue: String = "") {
-    var valor by remember { mutableStateOf(initValue) }
+fun InputTextField(label: String, value: String, callBack: (String) -> Unit) {
     OutlinedTextField(
-        value = valor,
+        value = value,
         onValueChange = { it ->
-            valor = it
+            callBack(it)
         },
         label = {
             Text(text = label)

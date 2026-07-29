@@ -4,17 +4,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import cl.uchile.dcc.mobile.peoplecounter.ui.screen.ScreenEnum
 
 class MainScreenViewModel : ViewModel() {
-    var actualScreen by mutableStateOf("COUNTER")
+    var actualScreen by mutableStateOf(ScreenEnum.COUNTER)
         private set
 
     fun changeToCounter() {
-        actualScreen = "COUNTER"
+        actualScreen = ScreenEnum.COUNTER
     }
 
     fun changeToRegistry() {
-        actualScreen = "REGISTRY"
+        actualScreen = ScreenEnum.REGISTRY
     }
 }
 
