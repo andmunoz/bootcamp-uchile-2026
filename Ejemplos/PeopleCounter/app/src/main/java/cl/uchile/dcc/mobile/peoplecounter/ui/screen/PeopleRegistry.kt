@@ -25,12 +25,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun PeopleRegistry(
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
     viewModel: RegistryViewModel = viewModel()
 ) {
     // Se definen las variables observables de la pantalla
-    val personas by remember { mutableStateOf( viewModel.personas ) }
-    var nombre by remember { mutableStateOf( viewModel.nombre ) }
+    val personas = remember { viewModel.personas }
+    var nombre by remember { mutableStateOf(viewModel.nombre ) }
 
     // Se define el layout de la pantalla
     Column(
@@ -44,8 +44,7 @@ fun PeopleRegistry(
         OutlinedTextField(
             value = nombre,
             onValueChange = { it ->
-                nombre = it
-                viewModel.onChangeNombre(nombre)
+                nombre = viewModel.updateNombre(it)
             },
             label = {
                 Text(text = "Ingrese el nombre del asistente")

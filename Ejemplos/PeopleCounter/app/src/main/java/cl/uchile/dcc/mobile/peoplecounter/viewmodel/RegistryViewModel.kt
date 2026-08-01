@@ -14,11 +14,16 @@ class RegistryViewModel : ViewModel() {
 
     // Agrega una persona a la lista
     fun addPerson(nombre: String) {
+        // Obtener la fecha
         val date = Date()
         val fecha = date.toString().substring(0, 10)
         val hora = date.toString().substring(11, 16)
+
+        // Crear la persona
         val persona = PersonRegistry(nombre, fecha, hora)
-        personas.add(0, persona) // Agregar al principio para ver el último registro
+
+        // Agregar al principio para ver el último registro
+        personas.add(0, persona)
     }
 
     // Nombre en el campo para guardar
@@ -30,7 +35,7 @@ class RegistryViewModel : ViewModel() {
         private set
 
     // Valida que el nombre tenga el formato correcto
-    fun onChangeNombre(nombre: String) {
+    fun updateNombre(nombre: String): String {
         this.nombre = nombre
 
         errorNombre =
@@ -39,6 +44,8 @@ class RegistryViewModel : ViewModel() {
             else if (nombre.length < 3)
                 "El nombre debe tener al menos 3 caracteres"
             else null
+
+        return this.nombre
     }
 
     // Estado con error

@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -23,11 +24,11 @@ import cl.uchile.dcc.mobile.peoplecounter.viewmodel.CounterViewModel
 
 @Composable
 fun PeopleCounter(
-    viewModel: CounterViewModel = viewModel(),
-    modifier: Modifier = Modifier.Companion
+    modifier: Modifier = Modifier,
+    viewModel: CounterViewModel = viewModel()
 ) {
     // Se define la variable observable
-    var contador by remember { mutableStateOf(viewModel.contador ) }
+    var contador by remember { mutableIntStateOf(viewModel.contador) }
 
     // Se define el layout
     Column(
@@ -48,7 +49,7 @@ fun PeopleCounter(
             DigitCounter(contador / 100)
             resto = contador % 100
             DigitCounter(resto / 10)
-            resto = resto % 10
+            resto %= 10
             DigitCounter(resto)
         }
         // Se define el boton
