@@ -46,29 +46,22 @@ class MainActivity : ComponentActivity() {
                     },
                     // El bottomBar se personliza de acuerdo al screen seleccionado
                     bottomBar = {
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceEvenly,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp, 16.dp, 16.dp, 48.dp)
+                        BottomAppBar(
+                            modifier = Modifier.fillMaxWidth()
                         ) {
-                            BottomAppBar(
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                NavigationBar() {
-                                    NavigationBarItem(
-                                        selected = viewModel.actualScreen == ScreenEnum.COUNTER,
-                                        onClick = { viewModel.changeToCounter() },
-                                        icon = { Icon(Icons.Filled.Add, contentDescription = ScreenEnum.COUNTER.title) },
-                                        label = { Text(ScreenEnum.COUNTER.title) }
-                                    )
-                                    NavigationBarItem(
-                                        selected = viewModel.actualScreen == ScreenEnum.REGISTRY,
-                                        onClick = { viewModel.changeToRegistry() },
-                                        icon = { Icon(Icons.Filled.List, contentDescription = ScreenEnum.REGISTRY.title) },
-                                        label = { Text(ScreenEnum.REGISTRY.title) }
-                                    )
-                                }
+                            NavigationBar() {
+                                NavigationBarItem(
+                                    selected = viewModel.actualScreen == ScreenEnum.COUNTER,
+                                    onClick = { viewModel.changeToCounter() },
+                                    icon = { Icon(Icons.Filled.Add, contentDescription = ScreenEnum.COUNTER.title) },
+                                    label = { Text(ScreenEnum.COUNTER.title) }
+                                )
+                                NavigationBarItem(
+                                    selected = viewModel.actualScreen == ScreenEnum.REGISTRY,
+                                    onClick = { viewModel.changeToRegistry() },
+                                    icon = { Icon(Icons.Filled.List, contentDescription = ScreenEnum.REGISTRY.title) },
+                                    label = { Text(ScreenEnum.REGISTRY.title) }
+                                )
                             }
                         }
                     },

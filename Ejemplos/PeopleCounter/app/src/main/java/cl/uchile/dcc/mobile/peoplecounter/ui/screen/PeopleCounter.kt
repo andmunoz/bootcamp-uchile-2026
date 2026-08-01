@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +27,7 @@ fun PeopleCounter(
     modifier: Modifier = Modifier.Companion
 ) {
     // Se define la variable observable
-        var contador by remember { mutableStateOf(viewModel.contador ) }
+    var contador by remember { mutableStateOf(viewModel.contador ) }
 
     // Se define el layout
     Column(
@@ -52,13 +54,22 @@ fun PeopleCounter(
         // Se define el boton
         SubmitButton(
             "Contar",
-            true,
+            enabled = viewModel.isValidContador,
             callBack = {
-                if (contador < 999) {
-                    contador++
-                    viewModel.onChangeContador(contador)
-                }
+                contador++
+                viewModel.raiseContador()
             }
         )
+        // Presentación del error
+        viewModel.errorContador?.let { mensaje ->
+            Text(
+                text = mensaje,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+            )
+        }
     }
 }

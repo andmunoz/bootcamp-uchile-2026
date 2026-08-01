@@ -10,8 +10,19 @@ class CounterViewModel: ViewModel() {
     var contador by mutableStateOf(0)
         private set
 
+    // Registro de error
+    var errorContador: String? by mutableStateOf(null)
+        private set
+
     // Almacenaje del contador cuando cambia
-    fun onChangeContador(contador: Int) {
-        this.contador = contador
+    fun raiseContador() {
+        if (contador < 9)
+            this.contador++
+        else
+            errorContador = "El contador no puede superar 999"
     }
+
+    // Estado con error
+    val isValidContador: Boolean
+        get() = errorContador == null
 }

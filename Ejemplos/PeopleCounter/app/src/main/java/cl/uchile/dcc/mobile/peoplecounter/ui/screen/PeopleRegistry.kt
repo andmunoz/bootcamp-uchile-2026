@@ -18,7 +18,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import cl.uchile.dcc.mobile.peoplecounter.ui.component.InputTextField
 import cl.uchile.dcc.mobile.peoplecounter.ui.component.PeopleCard
 import cl.uchile.dcc.mobile.peoplecounter.ui.component.SubmitButton
 import cl.uchile.dcc.mobile.peoplecounter.viewmodel.RegistryViewModel
