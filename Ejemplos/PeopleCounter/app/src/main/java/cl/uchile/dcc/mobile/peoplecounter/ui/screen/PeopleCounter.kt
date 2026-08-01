@@ -56,8 +56,7 @@ fun PeopleCounter(
             "Contar",
             enabled = viewModel.isValidContador,
             callBack = {
-                contador++
-                viewModel.raiseContador()
+                contador = viewModel.raiseContador()
             }
         )
         // Presentación del error

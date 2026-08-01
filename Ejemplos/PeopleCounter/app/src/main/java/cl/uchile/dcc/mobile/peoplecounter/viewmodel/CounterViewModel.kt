@@ -1,13 +1,14 @@
 package cl.uchile.dcc.mobile.peoplecounter.viewmodel
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 class CounterViewModel: ViewModel() {
     // Resguardo del contador
-    var contador by mutableStateOf(0)
+    var contador by mutableIntStateOf(0)
         private set
 
     // Registro de error
@@ -15,11 +16,12 @@ class CounterViewModel: ViewModel() {
         private set
 
     // Almacenaje del contador cuando cambia
-    fun raiseContador() {
-        if (contador < 9)
-            this.contador++
+    fun raiseContador(): Int {
+        if (contador < 999)
+            contador++
         else
             errorContador = "El contador no puede superar 999"
+        return contador
     }
 
     // Estado con error
