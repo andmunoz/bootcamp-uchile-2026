@@ -18,5 +18,3 @@ class MainScreenViewModel : ViewModel() {
         actualScreen = ScreenEnum.REGISTRY
     }
 }
-
-

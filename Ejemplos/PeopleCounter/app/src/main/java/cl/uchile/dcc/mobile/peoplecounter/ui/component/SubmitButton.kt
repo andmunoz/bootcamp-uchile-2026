@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SubmitButton(text: String, callBack: () -> Unit) {
+fun SubmitButton(text: String, enabled: Boolean, callBack: () -> Unit) {
     Button(
         onClick = { callBack() },
         modifier = Modifier
@@ -20,6 +20,7 @@ fun SubmitButton(text: String, callBack: () -> Unit) {
                 text = text,
                 modifier = Modifier.padding(32.dp)
             )
-        }
+        },
+        enabled = enabled
     )
 }

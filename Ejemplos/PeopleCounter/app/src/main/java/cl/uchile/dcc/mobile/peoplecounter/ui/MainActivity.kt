@@ -9,13 +9,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cl.uchile.dcc.mobile.peoplecounter.ui.screen.ScreenEnum
-import cl.uchile.dcc.mobile.peoplecounter.ui.component.MenuButton
 import cl.uchile.dcc.mobile.peoplecounter.ui.screen.PeopleCounter
 import cl.uchile.dcc.mobile.peoplecounter.ui.screen.PeopleRegistry
 import cl.uchile.dcc.mobile.peoplecounter.ui.theme.PeopleCounterTheme
@@ -46,16 +52,24 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxWidth()
                                 .padding(16.dp, 16.dp, 16.dp, 48.dp)
                         ) {
-                            MenuButton(
-                                ScreenEnum.COUNTER.title,
-                                enabled = viewModel.actualScreen != ScreenEnum.COUNTER,
-                                callBack = { viewModel.changeToCounter() }
-                            )
-                            MenuButton(
-                                ScreenEnum.REGISTRY.title,
-                                enabled = viewModel.actualScreen != ScreenEnum.REGISTRY,
-                                callBack = { viewModel.changeToRegistry() }
-                            )
+                            BottomAppBar(
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                NavigationBar() {
+                                    NavigationBarItem(
+                                        selected = viewModel.actualScreen == ScreenEnum.COUNTER,
+                                        onClick = { viewModel.changeToCounter() },
+                                        icon = { Icon(Icons.Filled.Add, contentDescription = ScreenEnum.COUNTER.title) },
+                                        label = { Text(ScreenEnum.COUNTER.title) }
+                                    )
+                                    NavigationBarItem(
+                                        selected = viewModel.actualScreen == ScreenEnum.REGISTRY,
+                                        onClick = { viewModel.changeToRegistry() },
+                                        icon = { Icon(Icons.Filled.List, contentDescription = ScreenEnum.REGISTRY.title) },
+                                        label = { Text(ScreenEnum.REGISTRY.title) }
+                                    )
+                                }
+                            }
                         }
                     },
                     modifier = Modifier.fillMaxSize()

@@ -14,12 +14,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cl.uchile.dcc.mobile.peoplecounter.ui.component.DigitCounter
 import cl.uchile.dcc.mobile.peoplecounter.ui.component.SubmitButton
+import cl.uchile.dcc.mobile.peoplecounter.viewmodel.CounterViewModel
 
 @Composable
-fun PeopleCounter(modifier: Modifier = Modifier.Companion) {
-    var contador by remember { mutableStateOf(0) }
+fun PeopleCounter(
+    viewModel: CounterViewModel = viewModel(),
+    modifier: Modifier = Modifier.Companion
+) {
+    // Se define la variable observable
+        var contador by remember { mutableStateOf(viewModel.contador ) }
+
+    // Se define el layout
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -27,11 +35,13 @@ fun PeopleCounter(modifier: Modifier = Modifier.Companion) {
             .fillMaxSize()
             .padding(16.dp, 0.dp)
     ) {
+        // Se define el layout de la fila
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
                 .fillMaxWidth()
         ) {
+            // Se define el layout de los digitos
             var resto = 0
             DigitCounter(contador / 100)
             resto = contador % 100
@@ -39,11 +49,14 @@ fun PeopleCounter(modifier: Modifier = Modifier.Companion) {
             resto = resto % 10
             DigitCounter(resto)
         }
+        // Se define el boton
         SubmitButton(
             "Contar",
+            true,
             callBack = {
                 if (contador < 999) {
                     contador++
+                    viewModel.onChangeContador(contador)
                 }
             }
         )
