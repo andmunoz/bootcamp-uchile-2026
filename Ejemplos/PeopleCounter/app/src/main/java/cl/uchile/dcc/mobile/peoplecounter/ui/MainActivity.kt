@@ -12,13 +12,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cl.uchile.dcc.mobile.peoplecounter.ui.screen.ScreenEnum
@@ -32,14 +36,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         // Se instancia el viewModel que tiene el estado de la pantalla
-        val viewModel = MainScreenViewModel()
+        val screenViewModel = MainScreenViewModel()
         setContent {
             PeopleCounterTheme {
+                // Se crea el objeto que habilita el snackbar en el scaffold
+                val snackbarHostState = remember { SnackbarHostState() }
                 Scaffold(
                     // El topBar se personliza de acuerdo al screen seleccionado
                     topBar = {
                         Text(
-                            text = viewModel.actualScreen.title,
+                            text = screenViewModel.actualScreen.title,
                             style = MaterialTheme.typography.titleLarge,
                             modifier = Modifier.padding(24.dp, 32.dp)
                         )
@@ -51,28 +57,42 @@ class MainActivity : ComponentActivity() {
                         ) {
                             NavigationBar() {
                                 NavigationBarItem(
-                                    selected = viewModel.actualScreen == ScreenEnum.COUNTER,
-                                    onClick = { viewModel.changeToCounter() },
-                                    icon = { Icon(Icons.Filled.Add, contentDescription = ScreenEnum.COUNTER.title) },
+                                    selected = screenViewModel.actualScreen == ScreenEnum.COUNTER,
+                                    onClick = { screenViewModel.changeToCounter() },
+                                    icon = { Icon(ScreenEnum.COUNTER.icon, contentDescription = ScreenEnum.COUNTER.title) },
                                     label = { Text(ScreenEnum.COUNTER.title) }
                                 )
                                 NavigationBarItem(
-                                    selected = viewModel.actualScreen == ScreenEnum.REGISTRY,
-                                    onClick = { viewModel.changeToRegistry() },
-                                    icon = { Icon(Icons.Filled.List, contentDescription = ScreenEnum.REGISTRY.title) },
+                                    selected = screenViewModel.actualScreen == ScreenEnum.REGISTRY,
+                                    onClick = { screenViewModel.changeToRegistry() },
+                                    icon = { Icon(ScreenEnum.REGISTRY.icon, contentDescription = ScreenEnum.REGISTRY.title) },
+                                    label = { Text(ScreenEnum.REGISTRY.title) }
+                                )
+                                NavigationBarItem(
+                                    selected = screenViewModel.actualScreen == ScreenEnum.LIST,
+                                    onClick = { screenViewModel.changeToRegistry() },
+                                    icon = { Icon(ScreenEnum.LIST.icon, contentDescription = ScreenEnum.LIST.title) },
                                     label = { Text(ScreenEnum.REGISTRY.title) }
                                 )
                             }
                         }
                     },
+                    snackbarHost = {
+                        SnackbarHost(snackbarHostState)
+                    },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
                     // Se selecciona el componible dependiendo de la pantalla
-                    when (viewModel.actualScreen) {
+                    when (screenViewModel.actualScreen) {
                         ScreenEnum.COUNTER -> PeopleCounter(
                             modifier = Modifier.padding(innerPadding)
                         )
                         ScreenEnum.REGISTRY -> PeopleRegistry(
+                            snackbarHostState,
+                            modifier = Modifier.padding(innerPadding)
+                        )
+                        ScreenEnum.LIST -> PeopleRegistry(
+                            snackbarHostState,
                             modifier = Modifier.padding(innerPadding)
                         )
                     }
