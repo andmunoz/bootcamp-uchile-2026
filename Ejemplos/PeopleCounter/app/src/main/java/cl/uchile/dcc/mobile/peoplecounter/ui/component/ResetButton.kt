@@ -16,7 +16,7 @@ fun ResetButton(text: String, enabled: Boolean, callBack: () -> Unit, icon: Imag
     OutlinedButton(
         onClick = { callBack() },
         modifier = Modifier
-            .padding(8.dp),
+            .padding(4.dp),
         content = {
             if (icon != null) {
                 Icon(
@@ -26,7 +26,7 @@ fun ResetButton(text: String, enabled: Boolean, callBack: () -> Unit, icon: Imag
             }
             Text(
                 text = text,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(8.dp)
             )
         },
         enabled = enabled

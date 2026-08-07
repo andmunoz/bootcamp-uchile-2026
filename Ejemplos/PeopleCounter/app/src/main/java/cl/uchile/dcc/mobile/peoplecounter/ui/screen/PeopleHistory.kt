@@ -50,6 +50,7 @@ fun PeopleHistory(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .padding(8.dp, 0.dp)
     ) {
         Text(
             text = "Cantidad de Personas: ${contador.intValue}",
@@ -60,8 +61,7 @@ fun PeopleHistory(
         )
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
+                .fillMaxSize(),
             content = {
                 items(personas) { persona ->
                     PeopleCard(persona)

@@ -12,12 +12,15 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.SaveAlt
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,9 +31,11 @@ import cl.uchile.dcc.mobile.peoplecounter.ui.component.ResetButton
 import cl.uchile.dcc.mobile.peoplecounter.ui.component.SubmitButton
 import cl.uchile.dcc.mobile.peoplecounter.viewmodel.CounterViewModel
 import cl.uchile.dcc.mobile.peoplecounter.viewmodel.RegistryViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun PeopleCounter(
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     viewModel: CounterViewModel = viewModel(),
     registryViewModel: RegistryViewModel = viewModel()
@@ -39,31 +44,39 @@ fun PeopleCounter(
     var contador by remember { mutableIntStateOf(viewModel.contador) }
     // contador = viewModel.setContador(registryViewModel.personas.size)
 
+    var scope = rememberCoroutineScope()
+
     // Se define el layout
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp, 0.dp)
     ) {
-        // Se define el layout de la fila
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
+                .weight(1f)
+                .fillMaxSize()
+                .padding(16.dp, 0.dp)
         ) {
-            // Se define el layout de los digitos
-            var resto = 0
-            DigitCounter(contador / 100)
-            resto = contador % 100
-            DigitCounter(resto / 10)
-            resto %= 10
-            DigitCounter(resto)
+            // Se define el layout de la fila
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            ) {
+                // Se define el layout de los digitos
+                var resto = 0
+                DigitCounter(contador / 100)
+                resto = contador % 100
+                DigitCounter(resto / 10)
+                resto %= 10
+                DigitCounter(resto)
+            }
         }
 
-        // Se define el boton
+        // Se define la botonera
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
@@ -74,6 +87,13 @@ fun PeopleCounter(
                 "Borrar",
                 enabled = true,
                 callBack = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = "¡Contador Reiniciado!",
+                            withDismissAction = true,
+                            duration = SnackbarDuration.Short
+                        )
+                    }
                     contador = viewModel.setContador(0)
                 },
                 icon = Icons.Filled.Clear

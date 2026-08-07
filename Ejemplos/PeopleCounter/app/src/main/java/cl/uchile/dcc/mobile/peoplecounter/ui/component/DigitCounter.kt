@@ -14,7 +14,7 @@ fun DigitCounter(numero: Int) {
         Text(
             text = numero.toString(),
             modifier = Modifier.padding(40.dp, 32.dp),
-            style = MaterialTheme.typography.labelLarge
+            style = MaterialTheme.typography.titleLarge
         )
     }
 }

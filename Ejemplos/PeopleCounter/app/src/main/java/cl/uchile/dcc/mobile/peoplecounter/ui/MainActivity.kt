@@ -104,6 +104,7 @@ fun MainScreen(screenViewModel: MainScreenViewModel = viewModel()) {
         // Se selecciona el componible dependiendo de la pantalla
         when (actualScreen) {
             ScreenEnum.COUNTER -> PeopleCounter(
+                snackbarHostState,
                 modifier = Modifier.padding(innerPadding)
             )
             ScreenEnum.REGISTRY -> PeopleRegistry(

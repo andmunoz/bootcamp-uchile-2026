@@ -66,131 +66,137 @@ fun PeopleRegistry(
 
     // Se define el layout de la pantalla
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp, 0.dp)
-            .verticalScroll(rememberScrollState())
-            .imePadding()
     ) {
-        // Se define el input de texto para el nombre
-        OutlinedTextField(
-            value = nombre,
-            onValueChange = { it ->
-                nombre = viewModel.updateNombre(it)
-            },
-            label = {
-                Text(text = "Ingrese el nombre del asistente")
-            },
-            isError = viewModel.errorNombre != null,
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                capitalization = KeyboardCapitalization.Words
-            ),
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth()
-            )
-        // Se define el mensaje de error
-        viewModel.errorNombre?.let { mensaje ->
-            Text(
-                text = mensaje,
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth()
-            )
-        }
-
-        // Se define el input de texto para la edad
-        OutlinedTextField(
-            value = edad.toString(),
-            onValueChange = { it ->
-                edad = viewModel.updateEdad(it)
-            },
-            label = {
-                Text(text = "Ingrese la edad del asistente")
-            },
-            isError = viewModel.errorEdad != null,
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            ),
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top,
             modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-        )
-        // Se define el mensaje de error
-        viewModel.errorEdad?.let { mensaje ->
-            Text(
-                text = mensaje,
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth()
-            )
-        }
-
-        // Se define el RadioButton para género
-        val generos = listOf("Masculino", "Femenino", "Tránsgenero", "No Binario", "Otro")
-        var expanded by remember { mutableStateOf(false ) }
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = {
-                expanded = !expanded
-            },
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
+                .weight(1f)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .imePadding()
         ) {
+            // Se define el input de texto para el nombre
             OutlinedTextField(
-                value = genero,
-                onValueChange = {
-                    genero = it
+                value = nombre,
+                onValueChange = { it ->
+                    nombre = viewModel.updateNombre(it)
                 },
                 label = {
-                    Text(text = "Ingrese el género del asistente")
+                    Text(text = "Ingrese el nombre del asistente")
                 },
-                isError = viewModel.errorGenero != null,
-                readOnly = true,
+                isError = viewModel.errorNombre != null,
+                singleLine = true,
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text
+                    keyboardType = KeyboardType.Text,
+                    capitalization = KeyboardCapitalization.Words
                 ),
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
-                    .menuAnchor()
             )
-            ExposedDropdownMenu(
+            // Se define el mensaje de error
+            viewModel.errorNombre?.let { mensaje ->
+                Text(
+                    text = mensaje,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                )
+            }
+
+            // Se define el input de texto para la edad
+            OutlinedTextField(
+                value = edad.toString(),
+                onValueChange = { it ->
+                    edad = viewModel.updateEdad(it)
+                },
+                label = {
+                    Text(text = "Ingrese la edad del asistente")
+                },
+                isError = viewModel.errorEdad != null,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                ),
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+            )
+            // Se define el mensaje de error
+            viewModel.errorEdad?.let { mensaje ->
+                Text(
+                    text = mensaje,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                )
+            }
+
+            // Se define el Dropdown para género
+            val generos = listOf("Masculino", "Femenino", "Tránsgenero", "No Binario", "Otro")
+            var expanded by remember { mutableStateOf(false) }
+            ExposedDropdownMenuBox(
                 expanded = expanded,
-                onDismissRequest = { expanded = false }
+                onExpandedChange = {
+                    expanded = !expanded
+                },
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
             ) {
-                generos.forEach { it ->
-                    DropdownMenuItem(
-                        text = { Text(it) },
-                        onClick = {
-                            genero = viewModel.updateGenero(it)
-                            expanded = false
-                        }
-                    )
+                OutlinedTextField(
+                    value = genero,
+                    onValueChange = {
+                        genero = it
+                    },
+                    label = {
+                        Text(text = "Ingrese el género del asistente")
+                    },
+                    isError = viewModel.errorGenero != null,
+                    readOnly = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text
+                    ),
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor()
+                )
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    generos.forEach { it ->
+                        DropdownMenuItem(
+                            text = { Text(it) },
+                            onClick = {
+                                genero = viewModel.updateGenero(it)
+                                expanded = false
+                            }
+                        )
+                    }
                 }
             }
-        }
-        // Se define el mensaje de error
-        viewModel.errorGenero?.let { mensaje ->
-            Text(
-                text = mensaje,
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth()
-            )
+            // Se define el mensaje de error
+            viewModel.errorGenero?.let { mensaje ->
+                Text(
+                    text = mensaje,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                )
+            }
+
         }
 
         // Se define el boton de registro
@@ -204,6 +210,13 @@ fun PeopleRegistry(
                 "Borrar",
                 enabled = true,
                 callBack = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = "¡Formulario Borrado!",
+                            withDismissAction = true,
+                            duration = SnackbarDuration.Short
+                        )
+                    }
                     nombre = viewModel.deleteNombre()
                     edad = viewModel.deleteEdad()
                     genero = viewModel.deleteGenero()

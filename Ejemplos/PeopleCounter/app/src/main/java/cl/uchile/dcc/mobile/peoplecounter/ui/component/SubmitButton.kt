@@ -15,7 +15,7 @@ fun SubmitButton(text: String, enabled: Boolean, callBack: () -> Unit, icon: Ima
     Button(
         onClick = { callBack() },
         modifier = Modifier
-            .padding(8.dp),
+            .padding(4.dp),
         content = {
             if (icon != null) {
                 Icon(
@@ -25,7 +25,7 @@ fun SubmitButton(text: String, enabled: Boolean, callBack: () -> Unit, icon: Ima
             }
             Text(
                 text = text,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(8.dp)
             )
         },
         enabled = enabled
