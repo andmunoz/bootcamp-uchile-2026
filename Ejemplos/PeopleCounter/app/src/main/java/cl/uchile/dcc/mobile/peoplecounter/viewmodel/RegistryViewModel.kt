@@ -41,6 +41,7 @@ class RegistryViewModel : ViewModel() {
 
         // Agregar al principio para ver el último registro
         personas.add(0, persona)
+        personas.sortByDescending { it.edad }
     }
 
     // Nombres de los campos a guardar temporalmente
@@ -80,6 +81,11 @@ class RegistryViewModel : ViewModel() {
         return this.nombre
     }
 
+    fun deleteNombre(): String {
+        this.nombre = ""
+        return this.nombre
+    }
+
     fun updateEdad(edad: String): Int {
         this.edad = edad.toIntOrNull() ?: 0
 
@@ -97,6 +103,11 @@ class RegistryViewModel : ViewModel() {
         return this.edad
     }
 
+    fun deleteEdad(): Int {
+        this.edad = 0
+        return this.edad
+    }
+
     fun updateGenero(genero: String): String {
         this.genero = genero
 
@@ -108,11 +119,12 @@ class RegistryViewModel : ViewModel() {
         return this.genero
     }
 
+    fun deleteGenero(): String {
+        this.genero = ""
+        return this.genero
+    }
+
     // Estados de error
-    val isValidNombre: Boolean
-        get() = nombre.isNotEmpty() && nombre.isNotBlank() && errorNombre == null
-    val isValidEdad: Boolean
-        get() = errorEdad == null
-    val isValidGenero: Boolean
-        get() = errorGenero == null
+    val isValidForm: Boolean
+        get() = errorNombre == null && errorEdad == null && errorGenero == null
 }

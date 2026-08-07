@@ -10,11 +10,8 @@ class MainScreenViewModel : ViewModel() {
     var actualScreen by mutableStateOf(ScreenEnum.COUNTER)
         private set
 
-    fun changeToCounter() {
-        actualScreen = ScreenEnum.COUNTER
-    }
-
-    fun changeToRegistry() {
-        actualScreen = ScreenEnum.REGISTRY
+    fun changeScreen(newScreen: ScreenEnum): ScreenEnum {
+        actualScreen = newScreen
+        return actualScreen
     }
 }

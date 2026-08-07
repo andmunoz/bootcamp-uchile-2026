@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,8 +12,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SubmitButton(text: String, enabled: Boolean, callBack: () -> Unit, icon: ImageVector?) {
-    Button(
+fun ResetButton(text: String, enabled: Boolean, callBack: () -> Unit, icon: ImageVector?) {
+    OutlinedButton(
         onClick = { callBack() },
         modifier = Modifier
             .padding(8.dp),

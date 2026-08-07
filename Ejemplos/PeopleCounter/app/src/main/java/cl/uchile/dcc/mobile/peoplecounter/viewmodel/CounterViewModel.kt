@@ -24,6 +24,11 @@ class CounterViewModel: ViewModel() {
         return contador
     }
 
+    fun setContador(contador: Int): Int {
+        this.contador = contador
+        return contador
+    }
+
     // Estado con error
     val isValidContador: Boolean
         get() = errorContador == null

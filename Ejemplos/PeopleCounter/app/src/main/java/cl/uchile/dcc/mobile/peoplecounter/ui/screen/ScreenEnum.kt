@@ -2,7 +2,10 @@ package cl.uchile.dcc.mobile.peoplecounter.ui.screen
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Copyright
+import androidx.compose.material.icons.sharp.Book
 import androidx.compose.material.icons.sharp.Edit
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -14,16 +17,16 @@ enum class ScreenEnum (
     COUNTER(
         "Contador",
         route = "Counter",
-        icon = Icons.Filled.Add
+        icon = Icons.Filled.Copyright
     ),
     REGISTRY(
         "Registro",
         route = "Registry",
-        icon = Icons.Sharp.Edit
+        icon = Icons.Sharp.Book
     ),
     LIST(
         "Asistentes",
         route = "Assistants",
-        icon = Icons.AutoMirrored.Filled.List
+        icon = Icons.AutoMirrored.Filled.ListAlt
     )
 }

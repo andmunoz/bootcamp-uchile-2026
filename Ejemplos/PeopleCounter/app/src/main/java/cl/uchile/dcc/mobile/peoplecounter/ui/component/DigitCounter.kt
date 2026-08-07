@@ -13,7 +13,7 @@ fun DigitCounter(numero: Int) {
     Card() {
         Text(
             text = numero.toString(),
-            modifier = Modifier.padding(32.dp, 16.dp),
+            modifier = Modifier.padding(40.dp, 32.dp),
             style = MaterialTheme.typography.labelLarge
         )
     }

@@ -6,7 +6,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.SaveAlt
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,21 +24,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cl.uchile.dcc.mobile.peoplecounter.ui.component.DigitCounter
+import cl.uchile.dcc.mobile.peoplecounter.ui.component.ResetButton
 import cl.uchile.dcc.mobile.peoplecounter.ui.component.SubmitButton
 import cl.uchile.dcc.mobile.peoplecounter.viewmodel.CounterViewModel
+import cl.uchile.dcc.mobile.peoplecounter.viewmodel.RegistryViewModel
 
 @Composable
 fun PeopleCounter(
     modifier: Modifier = Modifier,
-    viewModel: CounterViewModel = viewModel()
+    viewModel: CounterViewModel = viewModel(),
+    registryViewModel: RegistryViewModel = viewModel()
 ) {
     // Se define la variable observable
     var contador by remember { mutableIntStateOf(viewModel.contador) }
+    // contador = viewModel.setContador(registryViewModel.personas.size)
 
     // Se define el layout
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp, 0.dp)
@@ -43,6 +52,7 @@ fun PeopleCounter(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(bottom = 16.dp)
         ) {
             // Se define el layout de los digitos
             var resto = 0
@@ -52,14 +62,32 @@ fun PeopleCounter(
             resto %= 10
             DigitCounter(resto)
         }
+
         // Se define el boton
-        SubmitButton(
-            "Contar",
-            enabled = viewModel.isValidContador,
-            callBack = {
-                contador = viewModel.raiseContador()
-            }
-        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+        ) {
+            ResetButton(
+                "Borrar",
+                enabled = true,
+                callBack = {
+                    contador = viewModel.setContador(0)
+                },
+                icon = Icons.Filled.Clear
+            )
+            SubmitButton(
+                "Contar",
+                enabled = viewModel.isValidContador,
+                callBack = {
+                    contador = viewModel.raiseContador()
+                },
+                icon = Icons.Filled.AddCircle
+            )
+        }
+
         // Presentación del error
         viewModel.errorContador?.let { mensaje ->
             Text(
