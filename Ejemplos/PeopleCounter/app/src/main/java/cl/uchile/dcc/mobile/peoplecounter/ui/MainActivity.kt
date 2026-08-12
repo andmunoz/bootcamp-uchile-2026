@@ -112,7 +112,8 @@ fun MainScreen(screenViewModel: MainScreenViewModel = viewModel()) {
                 modifier = Modifier.padding(innerPadding)
             )
             ScreenEnum.LIST -> PeopleHistory(
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.padding(innerPadding),
+                snackbarHostState
             )
         }
     }

@@ -1,17 +1,26 @@
 package cl.uchile.dcc.mobile.peoplecounter.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import kotlinx.coroutines.flow.StateFlow
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import cl.uchile.dcc.mobile.peoplecounter.model.PeopleScreenState
 import cl.uchile.dcc.mobile.peoplecounter.model.PersonRegistry
+import cl.uchile.dcc.mobile.peoplecounter.model.RegistryFormState
+import cl.uchile.dcc.mobile.peoplecounter.model.RegistryUIState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.util.Date
 
 class RegistryViewModel : ViewModel() {
     // Lista de personas registradas (usando mutableStateListOf para reactividad)
-    val personas = mutableStateListOf<PersonRegistry>()
+    private val _state = MutableStateFlow(RegistryUIState(
+        registry = RegistryFormState(),
+        people = PeopleScreenState.Loading
+    ))
+    val state: StateFlow<RegistryUIState> = _state.asStateFlow()
 
     fun formatNombre(nombre: String): String {
         // Separar en una LISTA los diferentes nombres que vienen separados de espacios en blanco
@@ -26,67 +35,112 @@ class RegistryViewModel : ViewModel() {
         return nombreFormateado.joinToString(" ")
     }
 
-    // Agrega una persona a la lista
-    fun addPerson(nombre: String) {
-        // Obtener la fecha
-        val date = Date()
-        val fecha = date.toString().substring(0, 10)
-        val hora = date.toString().substring(11, 16)
-
-        // Formateamos el nombre limpio
-        val nombreFormateado = formatNombre(nombre)
-
-        // Crear la persona
-        val persona = PersonRegistry(nombreFormateado, edad = edad, genero = genero, fecha = fecha, hora = hora)
-
-        // Agregar al principio para ver el último registro
-        personas.add(0, persona)
-        personas.sortByDescending { it.edad }
+    fun getPersonas() : List<PersonRegistry> {
+        val personas = when (val ui = state.value.people) {
+            is PeopleScreenState.Success -> ui.people
+            else -> emptyList()
+        }
+        return personas
     }
 
-    // Nombres de los campos a guardar temporalmente
-    var nombre by mutableStateOf("")
-        private set
-    var edad by mutableIntStateOf(0)
-        private set
-    var genero by mutableStateOf("")
-        private set
+    // Agrega una persona a la lista
+    fun addPerson() {
+        // Formateamos el nombre limpio
+        val nombreFormateado = formatNombre(_state.value.registry.nombre)
+        if (nombreFormateado.isEmpty()) {
+            _state.update {
+                it.copy(
+                    registry = it.registry.copy(error = "El nombre no puede estar vacío")
+                )
+            }
+            return
+        }
 
-    // Mensaje de error para los campos de texto
-    var errorNombre: String? by mutableStateOf(null)
-        private set
-    var errorEdad: String? by mutableStateOf(null)
-        private set
-    var errorGenero: String? by mutableStateOf(null)
-        private set
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    people = PeopleScreenState.Saving
+                )
+            }
+            delay(2000)
+
+            // Obtener la fecha
+            val date = Date()
+            val fecha = date.toString().substring(0, 10)
+            val hora = date.toString().substring(11, 16)
+
+            // Crear la persona
+            val persona = PersonRegistry(
+                nombreFormateado,
+                edad = _state.value.registry.edad,
+                genero = _state.value.registry.genero,
+                fecha = fecha, hora = hora)
+
+            // Agregar al principio para ver el último registro
+            _state.update {
+                val personas = getPersonas()
+                val newList = listOf(persona) + personas
+                it.copy(
+                    people = PeopleScreenState.Success(
+                        people = newList,
+                        counter = newList.size
+                    )
+                )
+            }
+        }
+    }
+
+    fun loadPeople() {
+        viewModelScope.launch {
+            delay(2000)
+            _state.update {
+                it.copy(
+                    people = PeopleScreenState.Empty
+                )
+            }
+        }
+    }
 
     // Valida que el nombre tenga el formato correcto
-    fun updateNombre(nombre: String): String {
-        this.nombre = nombre
-
+    fun updateNombre(nombre: String) {
         // Validamos las condiciones para ingresar un nombre
-        errorNombre =
-            if (nombre.isEmpty() || nombre.isBlank())
-                "El nombre no puede estar vacío"
-            else if (nombre.length < 3)
-                "El nombre debe tener al menos 3 caracteres"
-            else if (nombre.length > 30)
-                "El nombre no puede tener más de 30 caracteres"
-            else null
+        _state.update {
+            it.copy(
+                registry = it.registry.copy(error =
+                if (nombre.isEmpty() || nombre.isBlank())
+                    "El nombre no puede estar vacío"
+                else if (nombre.length < 3)
+                    "El nombre debe tener al menos 3 caracteres"
+                else if (nombre.length > 30)
+                    "El nombre no puede tener más de 30 caracteres"
+                else null )
+            )
+        }
 
         // Si escribo más del largo, entonces solo muestro los primeros
         if (nombre.length > 30)
-            this.nombre = nombre.substring(0, 30)
-
-        return this.nombre
+            _state.update {
+                it.copy(
+                    registry = it.registry.copy(nombre = nombre.substring(0, 30))
+                )
+            }
+        else
+            _state.update {
+                it.copy(
+                    registry = it.registry.copy(nombre = nombre)
+                )
+            }
     }
 
-    fun deleteNombre(): String {
-        this.nombre = ""
-        return this.nombre
+    fun deleteNombre() {
+        _state.update {
+            it.copy(
+                registry = it.registry.copy(nombre = "")
+            )
+        }
     }
 
-    fun updateEdad(edad: String): Int {
+/*     fun updateEdad(edad: String): Int {
         this.edad = edad.toIntOrNull() ?: 0
 
         errorEdad =
@@ -124,7 +178,5 @@ class RegistryViewModel : ViewModel() {
         return this.genero
     }
 
-    // Estados de error
-    val isValidForm: Boolean
-        get() = errorNombre == null && errorEdad == null && errorGenero == null
+    */
 }

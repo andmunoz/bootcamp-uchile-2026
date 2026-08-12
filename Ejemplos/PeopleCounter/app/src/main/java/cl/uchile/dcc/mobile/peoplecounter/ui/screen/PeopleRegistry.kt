@@ -1,48 +1,33 @@
 package cl.uchile.dcc.mobile.peoplecounter.ui.screen
 
-import androidx.collection.mutableIntSetOf
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.SaveAlt
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import cl.uchile.dcc.mobile.peoplecounter.ui.component.PeopleCard
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cl.uchile.dcc.mobile.peoplecounter.ui.component.SubmitButton
 import cl.uchile.dcc.mobile.peoplecounter.viewmodel.RegistryViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -57,9 +42,8 @@ fun PeopleRegistry(
     viewModel: RegistryViewModel = viewModel()
 ) {
     // Se definen las variables observables de la pantalla
-    var nombre by remember { mutableStateOf(viewModel.nombre ) }
-    var edad by remember { mutableIntStateOf(viewModel.edad ) }
-    var genero by remember { mutableStateOf( viewModel.genero) }
+    val screenState by viewModel.state.collectAsStateWithLifecycle()
+    val state = screenState.registry
 
     // Se define el snackbarHostState
     val scope = rememberCoroutineScope()
@@ -81,14 +65,14 @@ fun PeopleRegistry(
         ) {
             // Se define el input de texto para el nombre
             OutlinedTextField(
-                value = nombre,
+                value = state.nombre,
                 onValueChange = { it ->
-                    nombre = viewModel.updateNombre(it)
+                    viewModel.updateNombre(it)
                 },
                 label = {
                     Text(text = "Ingrese el nombre del asistente")
                 },
-                isError = viewModel.errorNombre != null,
+                isError = state.error != null,
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
@@ -99,7 +83,7 @@ fun PeopleRegistry(
                     .fillMaxWidth()
             )
             // Se define el mensaje de error
-            viewModel.errorNombre?.let { mensaje ->
+            state.error?.let { mensaje ->
                 Text(
                     text = mensaje,
                     color = MaterialTheme.colorScheme.error,
@@ -109,9 +93,10 @@ fun PeopleRegistry(
                         .fillMaxWidth()
                 )
             }
+        }
 
             // Se define el input de texto para la edad
-            OutlinedTextField(
+/*             OutlinedTextField(
                 value = edad.toString(),
                 onValueChange = { it ->
                     edad = viewModel.updateEdad(it)
@@ -197,7 +182,7 @@ fun PeopleRegistry(
                 )
             }
 
-        }
+        } */
 
         // Se define el boton de registro
         Row(
@@ -217,17 +202,15 @@ fun PeopleRegistry(
                             duration = SnackbarDuration.Short
                         )
                     }
-                    nombre = viewModel.deleteNombre()
-                    edad = viewModel.deleteEdad()
-                    genero = viewModel.deleteGenero()
+                    viewModel.deleteNombre()
                 },
                 icon = Icons.Filled.Clear
             )
             SubmitButton(
                 "Registrar",
-                enabled = viewModel.isValidForm,
+                enabled = state.error == null && state.nombre.length > 0,
                 callBack = {
-                    viewModel.addPerson(nombre)
+                    viewModel.addPerson()
                     scope.launch {
                         snackbarHostState.showSnackbar(
                             message = "¡Persona registrada!",
@@ -235,9 +218,7 @@ fun PeopleRegistry(
                             duration = SnackbarDuration.Short
                         )
                     }
-                    nombre = viewModel.deleteNombre()
-                    edad = viewModel.deleteEdad()
-                    genero = viewModel.deleteGenero()
+                    viewModel.deleteNombre()
                 },
                 icon = Icons.Filled.SaveAlt
             )
