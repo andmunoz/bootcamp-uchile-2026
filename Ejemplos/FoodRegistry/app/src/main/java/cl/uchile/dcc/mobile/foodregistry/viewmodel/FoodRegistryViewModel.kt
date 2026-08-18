@@ -7,6 +7,7 @@ import cl.uchile.dcc.mobile.foodregistry.ui.screenstates.FoodRegistryFormState
 import cl.uchile.dcc.mobile.foodregistry.ui.screenstates.FoodRegistryScreenState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class FoodRegistryViewModel: ViewModel() {
@@ -30,16 +31,18 @@ class FoodRegistryViewModel: ViewModel() {
     private val _currentRoute = MutableStateFlow(ScreenRoutes.OVERVIEW)
     val currentRoute: StateFlow<ScreenRoutes> = _currentRoute
 
+    private val _navStack = MutableStateFlow(listOf(ScreenRoutes.OVERVIEW))
+    val navStack: StateFlow<List<ScreenRoutes>> = _navStack.asStateFlow()
+
     fun navigateTo(route: String) {
-        _currentRoute.update {
-            when (route) {
-                ScreenRoutes.OVERVIEW.route -> ScreenRoutes.OVERVIEW
-                ScreenRoutes.REGISTRY.route -> ScreenRoutes.REGISTRY
-                ScreenRoutes.HISTORY.route -> ScreenRoutes.HISTORY
-                ScreenRoutes.FOODS.route -> ScreenRoutes.FOODS
-                ScreenRoutes.SETTINGS.route -> ScreenRoutes.SETTINGS
-                else -> ScreenRoutes.OVERVIEW
-            }
-        }
+        val screenRoute = ScreenRoutes.values().find { it.route == route } ?: ScreenRoutes.OVERVIEW
+        _navStack.update { it + screenRoute }
+        _currentRoute.update { screenRoute }
+    }
+
+    fun goBack() {
+        if (_navStack.value.size <= 1) return
+        _navStack.update { it.dropLast(1) }
+        _currentRoute.update { _navStack.value.last() }
     }
 }

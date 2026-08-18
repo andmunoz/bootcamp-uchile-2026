@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.sharp.AddCard
+import androidx.compose.material.icons.sharp.ArrowBack
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -67,17 +68,31 @@ fun FoodRegistryApp(
                 TopAppBar(
                     title = { Text(text = currentRoute.title) },
                     navigationIcon = {
-                        IconButton(
-                            onClick = {
-                                scope.launch {
-                                    drawerState.open()
+                        if (currentRoute != ScreenRoutes.OVERVIEW) {
+                            IconButton(
+                                onClick = {
+                                    viewModel.goBack()
                                 }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Sharp.ArrowBack,
+                                    contentDescription = "Volver"
+                                )
                             }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Menu,
-                                contentDescription = "Menu"
-                            )
+                        }
+                        else {
+                            IconButton(
+                                onClick = {
+                                    scope.launch {
+                                        drawerState.open()
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Menu,
+                                    contentDescription = "Menu"
+                                )
+                            }
                         }
                     },
                     actions = {
