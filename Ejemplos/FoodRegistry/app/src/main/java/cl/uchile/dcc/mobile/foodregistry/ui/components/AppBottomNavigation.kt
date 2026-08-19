@@ -9,7 +9,7 @@ import cl.uchile.dcc.mobile.foodregistry.ui.screens.ScreenRoutes
 
 @Composable
 fun MainBottomNavigation(
-    currentRoute: String,
+    currentRoute: String?,
     onNavigateTo: (String) -> Unit,
 ) {
     NavigationBar() {

@@ -13,16 +13,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import cl.uchile.dcc.mobile.foodregistry.ui.screens.ScreenRoutes
 import cl.uchile.dcc.mobile.foodregistry.viewmodel.FoodRegistryViewModel
 
 @Composable
 fun FoodRegistryNavigationDrawer(
     viewModel: FoodRegistryViewModel,
+    navController: NavController,
     onCloseDrawer: () -> Unit
 ) {
-    val currentRoute by viewModel.currentRoute.collectAsState()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -44,10 +44,14 @@ fun FoodRegistryNavigationDrawer(
 
         items.forEach { item ->
             NavigationDrawerItem(
-                label = { Text(text = item.title) },
-                selected = currentRoute == item,
+                label = {
+                    Text(
+                        text = item.title
+                    )
+                },
+                selected = navController.currentBackStackEntry?.destination?.route == item.route,
                 onClick = {
-                    viewModel.navigateTo(item.route)
+                    navController.navigate(item.route)
                     onCloseDrawer()
                 },
                 modifier = Modifier.padding(vertical = 8.dp)

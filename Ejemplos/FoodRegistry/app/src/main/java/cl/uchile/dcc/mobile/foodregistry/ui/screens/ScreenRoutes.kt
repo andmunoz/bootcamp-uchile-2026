@@ -28,6 +28,11 @@ enum class ScreenRoutes (
         title = "Historial",
         icon = Icons.Sharp.FormatListBulleted
     ),
+    HISTORY_DETAILS(
+        route = "history_detail",
+        title = "Detalle de Comida",
+        icon = Icons.Sharp.FormatListBulleted
+    ),
     SETTINGS(
         route = "settings",
         title = "Configuración",

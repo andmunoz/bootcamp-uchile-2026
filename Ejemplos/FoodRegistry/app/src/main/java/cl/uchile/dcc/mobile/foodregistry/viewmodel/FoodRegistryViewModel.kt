@@ -1,16 +1,25 @@
 package cl.uchile.dcc.mobile.foodregistry.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import cl.uchile.dcc.mobile.foodregistry.data.FoodRegistry
 import cl.uchile.dcc.mobile.foodregistry.ui.screens.ScreenRoutes
 import cl.uchile.dcc.mobile.foodregistry.ui.screenstates.FoodRegistryEventState
 import cl.uchile.dcc.mobile.foodregistry.ui.screenstates.FoodRegistryFormState
 import cl.uchile.dcc.mobile.foodregistry.ui.screenstates.FoodRegistryScreenState
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
-class FoodRegistryViewModel: ViewModel() {
+class FoodRegistryViewModel(
+    private val savedStateHandle: SavedStateHandle = SavedStateHandle(),
+    private val registryRepository: List<FoodRegistry> = emptyList(),
+): ViewModel() {
     private val _uiState = MutableStateFlow(FoodRegistryScreenState(
         FoodRegistryFormState(),
         FoodRegistryEventState.Empty))
@@ -28,21 +37,19 @@ class FoodRegistryViewModel: ViewModel() {
         }
     }
 
-    private val _currentRoute = MutableStateFlow(ScreenRoutes.OVERVIEW)
-    val currentRoute: StateFlow<ScreenRoutes> = _currentRoute
+    private val _foodRegistryId = savedStateHandle
+        .getStateFlow("foodRegistryId", "")
+    val foodRegistryId: StateFlow<String> = _foodRegistryId
 
-    private val _navStack = MutableStateFlow(listOf(ScreenRoutes.OVERVIEW))
-    val navStack: StateFlow<List<ScreenRoutes>> = _navStack.asStateFlow()
+    val foodRegistry: StateFlow<FoodRegistry?> = _foodRegistryId.map {
+        registryRepository.find { it.id == _foodRegistryId.value }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = null
+    )
 
-    fun navigateTo(route: String) {
-        val screenRoute = ScreenRoutes.values().find { it.route == route } ?: ScreenRoutes.OVERVIEW
-        _navStack.update { it + screenRoute }
-        _currentRoute.update { screenRoute }
-    }
-
-    fun goBack() {
-        if (_navStack.value.size <= 1) return
-        _navStack.update { it.dropLast(1) }
-        _currentRoute.update { _navStack.value.last() }
+    fun setFoodRegistryId(id: String) {
+        savedStateHandle["foodRegistryId"] = id
     }
 }
