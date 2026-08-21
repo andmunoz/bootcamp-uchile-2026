@@ -86,7 +86,8 @@ fun FoodRegistryApp(
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Menu,
-                                contentDescription = "Menu"
+                                contentDescription = "Menu",
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
                     },

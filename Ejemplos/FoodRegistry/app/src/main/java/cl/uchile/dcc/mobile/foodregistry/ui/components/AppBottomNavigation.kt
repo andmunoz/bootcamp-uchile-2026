@@ -1,8 +1,11 @@
 package cl.uchile.dcc.mobile.foodregistry.ui.components
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import cl.uchile.dcc.mobile.foodregistry.ui.screens.ScreenRoutes
@@ -12,7 +15,10 @@ fun MainBottomNavigation(
     currentRoute: String?,
     onNavigateTo: (String) -> Unit,
 ) {
-    NavigationBar() {
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurface
+    ) {
         val sections = listOf(
             ScreenRoutes.OVERVIEW,
             ScreenRoutes.REGISTRY,
@@ -24,7 +30,16 @@ fun MainBottomNavigation(
                 selected = currentRoute == section.route,
                 onClick = { onNavigateTo(section.route) },
                 icon = { Icon(section.icon, contentDescription = section.title) },
-                label = { Text(section.title) }
+                label = { Text(section.title) },
+                colors = NavigationBarItemColors(
+                    selectedTextColor = MaterialTheme.colorScheme.onSurface,
+                    selectedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurface,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurface,
+                    selectedIconColor = MaterialTheme.colorScheme.onSurface,
+                    disabledIconColor = MaterialTheme.colorScheme.onSurface,
+                    disabledTextColor = MaterialTheme.colorScheme.onSurface
+                )
             )
         }
     }

@@ -22,6 +22,7 @@ fun OverviewScreen(
         Text(
             text = "Tablero de Control",
             style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
     }
 }

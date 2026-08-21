@@ -31,11 +31,14 @@ fun FoodRegistryNavigationDrawer(
     ) {
         Text(
             text = "Mi Alimentación",
-            modifier = Modifier.padding(bottom = 16.dp),
-            style = MaterialTheme.typography.headlineMedium
+            modifier = Modifier.padding(16.dp),
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
 
-        HorizontalDivider()
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.onPrimaryContainer
+        )
 
         val items = listOf(
             ScreenRoutes.FOODS,
@@ -46,7 +49,8 @@ fun FoodRegistryNavigationDrawer(
             NavigationDrawerItem(
                 label = {
                     Text(
-                        text = item.title
+                        text = item.title,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 },
                 selected = navController.currentBackStackEntry?.destination?.route == item.route,
