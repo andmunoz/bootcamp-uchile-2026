@@ -5,16 +5,13 @@ import cl.uchile.dcc.mobile.foodregistry.data.FoodRegistry
 import cl.uchile.dcc.mobile.foodregistry.data.FoodType
 
 data class FoodRegistryFormState(
-    // Registro de Comidas
+    // Datos del formulario
     val fecha: String = "",
-    val foodTypes: List<FoodType> = DefaultData.foodTypes,
     val tipoId: String = "",
-    val descripcion: String = "",
+    val descripcion: String? = null,
     val calorias: String? = null,
     val carbohidratos: String? = null,
-    // Lista de Comidas
-    val foodRegistry: List<FoodRegistry> = emptyList(),
-    val foodFilter: String = "",
-    // Configuración
-    val nombre: String = "",
+
+    // Dropdown de comidas
+    val foodTypes: List<FoodType> = DefaultData.foodTypes,
 )

@@ -4,6 +4,7 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Text
@@ -17,7 +18,8 @@ fun MainBottomNavigation(
 ) {
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.onSurface
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        tonalElevation = NavigationBarDefaults.Elevation
     ) {
         val sections = listOf(
             ScreenRoutes.OVERVIEW,
@@ -28,15 +30,26 @@ fun MainBottomNavigation(
         sections.forEach { section ->
             NavigationBarItem(
                 selected = currentRoute == section.route,
-                onClick = { onNavigateTo(section.route) },
-                icon = { Icon(section.icon, contentDescription = section.title) },
-                label = { Text(section.title) },
+                onClick = {
+                    onNavigateTo(section.route)
+                },
+                icon = {
+                    Icon(
+                        section.icon,
+                        contentDescription = section.title
+                    )
+                },
+                label = {
+                    Text(
+                        text = section.title
+                    )
+                 },
                 colors = NavigationBarItemColors(
-                    selectedTextColor = MaterialTheme.colorScheme.onSurface,
-                    selectedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                    selectedIndicatorColor = MaterialTheme.colorScheme.surfaceVariant,
+                    selectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    selectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     unselectedIconColor = MaterialTheme.colorScheme.onSurface,
                     unselectedTextColor = MaterialTheme.colorScheme.onSurface,
-                    selectedIconColor = MaterialTheme.colorScheme.onSurface,
                     disabledIconColor = MaterialTheme.colorScheme.onSurface,
                     disabledTextColor = MaterialTheme.colorScheme.onSurface
                 )

@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Food Registry</string>
     <string name="title_activity_food_detail">FoodDetailActivity</string>
+    <string name="educacion_continua">Educación Continua</string>
+    <string name="dcc_universidad_de_chile">DCC Universidad de Chile</string>
+    <string name="ciencias_de_la_computacion">CIENCIAS DE LA COMPUTACIÓN</string>
+    <string name="universidad_de_chile">UNIVERSIDAD DE CHILE</string>
+    <string name="dcc">dcc</string>
 </resources>

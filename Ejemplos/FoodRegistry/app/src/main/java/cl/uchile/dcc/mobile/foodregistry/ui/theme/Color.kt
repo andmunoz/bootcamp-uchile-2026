@@ -29,6 +29,10 @@ val surfaceLightColor = Color(0xFF2f312a)
 val surfaceDarkColor = Color(0xFFe2e3d8)
 val onSurfaceLightColor = Color(0xFFf1f2e6)
 val onSurfaceDarkColor = Color(0xFF2f312a)
+val surfaceBrightLightColor = Color(0xFFf9faef)
+val surfaceBrightDarkColor = Color(0xFF383a32)
+val onSurfaceBrightLightColor = Color(0xFF1a1c16)
+val onSurfaceBrightDarkColor = Color(0xFFe2e3d8)
 
 /*
     Cómo se define el color:

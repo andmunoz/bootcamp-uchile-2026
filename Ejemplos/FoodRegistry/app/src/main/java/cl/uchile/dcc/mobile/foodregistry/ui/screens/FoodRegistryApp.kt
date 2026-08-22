@@ -38,9 +38,7 @@ import kotlinx.coroutines.launch
 fun FoodRegistryApp(
     viewModel: FoodRegistryViewModel = viewModel()
 ) {
-    val eventState by viewModel.uiState.collectAsStateWithLifecycle()
     val navController = rememberNavController()
-
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
