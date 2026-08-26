@@ -1,5 +1,6 @@
 package cl.uchile.dcc.mobile.foodregistry.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -59,7 +60,9 @@ fun FoodRegistryApp(
             )
         }
     ) {
-        val title = when (navController.currentBackStackEntry?.destination?.route) {
+        val route = navController.currentBackStackEntry?.destination?.route?:""
+        Log.d("FoodRegistryApp", "Route: $route")
+        val title = when (route) {
             ScreenRoutes.OVERVIEW.route -> ScreenRoutes.OVERVIEW.title
             ScreenRoutes.REGISTRY.route -> ScreenRoutes.REGISTRY.title
             ScreenRoutes.HISTORY.route -> ScreenRoutes.HISTORY.title

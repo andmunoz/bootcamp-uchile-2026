@@ -22,9 +22,9 @@ class FoodRegistryViewModel(
 
     private fun maskDate(fecha: String): String {
         val fecha = fecha.replace("/", "")
-        var day: String = ""
-        var month: String = ""
-        var year: String = ""
+        var day = ""
+        var month = ""
+        var year = ""
 
         if (fecha.length <= 2) {
             day = fecha
@@ -105,7 +105,7 @@ class FoodRegistryViewModel(
     }
 
     // Historial de comidas
-    val _foodRegistryRepository = MutableStateFlow<List<FoodRegistry>>(emptyList())
+    private val _foodRegistryRepository = MutableStateFlow<List<FoodRegistry>>(emptyList())
     val foodRegistryRepository: StateFlow<List<FoodRegistry>> = _foodRegistryRepository
 
     private val _foodRegistryId = savedStateHandle

@@ -33,13 +33,3 @@ val surfaceBrightLightColor = Color(0xFFf9faef)
 val surfaceBrightDarkColor = Color(0xFF383a32)
 val onSurfaceBrightLightColor = Color(0xFF1a1c16)
 val onSurfaceBrightDarkColor = Color(0xFFe2e3d8)
-
-/*
-    Cómo se define el color:
-    (A) Alpha = Opacidad del color (00 a FF)
-    (R) Rojo = Cantidad del color rojo
-    (G) Verde = Cantidad del color verde
-    (B) Azul = Cantidad del color azul
-    El sistema Hexadecimal usado para cada color son dos dígitos en base 16
-    => 0, 1, 2, ..., 9, A, B, C, D, E, F
-*/

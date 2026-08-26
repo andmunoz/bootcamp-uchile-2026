@@ -14,4 +14,5 @@ data class FoodRegistryFormState(
 
     // Dropdown de comidas
     val foodTypes: List<FoodType> = DefaultData.foodTypes,
+    val showDatePicker: Boolean = false
 )
