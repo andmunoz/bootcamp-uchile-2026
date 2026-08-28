@@ -7,9 +7,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.ViewModelProvider
+import cl.uchile.dcc.mobile.foodregistry.data.repository.FoodRegistryAppRepository
 import cl.uchile.dcc.mobile.foodregistry.ui.screens.FoodRegistryApp
 import cl.uchile.dcc.mobile.foodregistry.ui.theme.FoodRegistryTheme
 import cl.uchile.dcc.mobile.foodregistry.viewmodel.FoodRegistryViewModel
+import androidx.compose.runtime.collectAsState
 
 class MainActivity : ComponentActivity() {
     private lateinit var viewModel: FoodRegistryViewModel
@@ -18,12 +20,25 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        viewModel = ViewModelProvider(this)[FoodRegistryViewModel::class.java]
+        val configRepo = FoodRegistryAppRepository(
+            getSharedPreferences("ConfigApp", MODE_PRIVATE),
+            getSharedPreferences("ValuesApp", MODE_PRIVATE)
+        )
+        viewModel = FoodRegistryViewModel(configRepo)
         processDeepLink(intent)
 
         setContent {
-            FoodRegistryTheme {
-                FoodRegistryApp()
+            val theme = viewModel.appTheme.collectAsState().value
+            if (theme == "Auto") {
+                FoodRegistryTheme {
+                    FoodRegistryApp(viewModel)
+                }
+            } else {
+                FoodRegistryTheme(
+                    darkTheme = theme == "Oscuro"
+                ) {
+                    FoodRegistryApp(viewModel)
+                }
             }
         }
     }

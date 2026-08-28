@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.sharp.AddCard
+import androidx.compose.material.icons.sharp.WbSunny
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -95,11 +96,12 @@ fun FoodRegistryApp(
                     actions = {
                         IconButton(
                             onClick = {
+                                viewModel.changeTheme()
                             }
                         ) {
                             Icon(
-                                imageVector = Icons.Sharp.AddCard,
-                                contentDescription = "Menu"
+                                imageVector = Icons.Sharp.WbSunny,
+                                contentDescription = "Cambiar Tema"
                             )
                         }
                     },

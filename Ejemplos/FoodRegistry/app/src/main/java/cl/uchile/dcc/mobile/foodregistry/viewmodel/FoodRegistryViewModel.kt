@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cl.uchile.dcc.mobile.foodregistry.data.FoodRegistry
+import cl.uchile.dcc.mobile.foodregistry.data.repository.FoodRegistryAppRepository
 import cl.uchile.dcc.mobile.foodregistry.ui.screenstates.FoodRegistryEventState
 import cl.uchile.dcc.mobile.foodregistry.ui.screenstates.FoodRegistryFormState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,8 +15,23 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 class FoodRegistryViewModel(
+    private val configRepo: FoodRegistryAppRepository,
     private val savedStateHandle: SavedStateHandle = SavedStateHandle()
 ): ViewModel() {
+    private val _appTheme = MutableStateFlow(configRepo.getTheme())
+    val appTheme: StateFlow<String> = _appTheme
+
+    fun changeTheme() {
+        var theme = appTheme.value
+        when(theme) {
+            "Auto" -> theme = "Claro"
+            "Claro" -> theme = "Oscuro"
+            "Oscuro" -> theme = "Claro"
+        }
+        configRepo.setTheme(theme)
+        _appTheme.value = theme
+    }
+
     // Estados del formulario de registro
     private val _formState = MutableStateFlow(FoodRegistryFormState())
     val formState: StateFlow<FoodRegistryFormState> = _formState
