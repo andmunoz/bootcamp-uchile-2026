@@ -42,18 +42,18 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun FoodRegistryTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: String = "Auto",
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
+    val colorScheme =
+        if (darkTheme == "Auto" && isSystemInDarkTheme() || darkTheme == "Oscuro") { DarkColorScheme }
+        else { LightColorScheme }
+
+    /* dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+        val context = LocalContext.current
+        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    } */
 
     MaterialTheme(
         colorScheme = colorScheme,

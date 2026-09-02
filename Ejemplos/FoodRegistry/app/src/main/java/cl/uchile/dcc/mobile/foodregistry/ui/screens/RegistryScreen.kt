@@ -74,7 +74,7 @@ fun RegistryScreen(
             label = {
                 Text("Fecha (dd/mm/aaaa)")
             },
-            readOnly = true,
+            readOnly = false,
             trailingIcon = {
                 IconButton(onClick = { showDatePicker = !showDatePicker }) {
                     Icon(
@@ -102,10 +102,10 @@ fun RegistryScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .offset(y = 64.dp)
+                        .offset(y = 12.dp)
                         .shadow(elevation = 4.dp)
                         .background(MaterialTheme.colorScheme.surface)
-                        .padding(16.dp)
+                        .padding(8.dp)
                 ) {
                     DatePicker(
                         state = datePickerState,

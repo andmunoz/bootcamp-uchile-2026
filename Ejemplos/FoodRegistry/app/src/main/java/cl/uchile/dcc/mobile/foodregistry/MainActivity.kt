@@ -1,5 +1,6 @@
 package cl.uchile.dcc.mobile.foodregistry
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -12,33 +13,38 @@ import cl.uchile.dcc.mobile.foodregistry.ui.screens.FoodRegistryApp
 import cl.uchile.dcc.mobile.foodregistry.ui.theme.FoodRegistryTheme
 import cl.uchile.dcc.mobile.foodregistry.viewmodel.FoodRegistryViewModel
 import androidx.compose.runtime.collectAsState
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
+import cl.uchile.dcc.mobile.foodregistry.data.FoodRegistry
+import cl.uchile.dcc.mobile.foodregistry.data.database.FoodDataRepository
 
 class MainActivity : ComponentActivity() {
     private lateinit var viewModel: FoodRegistryViewModel
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "ConfigApp")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        val configPreferences: DataStore<Preferences> = this.dataStore
+        val valuesPreferences = getSharedPreferences("ValuesApp", MODE_PRIVATE)
+
         val configRepo = FoodRegistryAppRepository(
-            getSharedPreferences("ConfigApp", MODE_PRIVATE),
-            getSharedPreferences("ValuesApp", MODE_PRIVATE)
+            applicationContext,
+            configPreferences,
+            valuesPreferences
         )
-        viewModel = FoodRegistryViewModel(configRepo)
+        val configDatabase = FoodDataRepository(applicationContext)
+        viewModel = FoodRegistryViewModel(configRepo, configDatabase)
         processDeepLink(intent)
 
         setContent {
             val theme = viewModel.appTheme.collectAsState().value
-            if (theme == "Auto") {
-                FoodRegistryTheme {
-                    FoodRegistryApp(viewModel)
-                }
-            } else {
-                FoodRegistryTheme(
-                    darkTheme = theme == "Oscuro"
-                ) {
-                    FoodRegistryApp(viewModel)
-                }
+            FoodRegistryTheme(
+                darkTheme = theme
+            ) {
+                FoodRegistryApp(viewModel)
             }
         }
     }

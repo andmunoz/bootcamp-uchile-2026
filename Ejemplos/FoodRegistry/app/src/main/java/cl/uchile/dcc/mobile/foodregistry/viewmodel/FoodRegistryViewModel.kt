@@ -4,6 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cl.uchile.dcc.mobile.foodregistry.data.FoodRegistry
+import cl.uchile.dcc.mobile.foodregistry.data.Indicator
+import cl.uchile.dcc.mobile.foodregistry.data.OverviewData
+import cl.uchile.dcc.mobile.foodregistry.data.database.FoodDataRepository
 import cl.uchile.dcc.mobile.foodregistry.data.repository.FoodRegistryAppRepository
 import cl.uchile.dcc.mobile.foodregistry.ui.screenstates.FoodRegistryEventState
 import cl.uchile.dcc.mobile.foodregistry.ui.screenstates.FoodRegistryFormState
@@ -13,23 +16,43 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class FoodRegistryViewModel(
     private val configRepo: FoodRegistryAppRepository,
+    private val dataRepo: FoodDataRepository,
     private val savedStateHandle: SavedStateHandle = SavedStateHandle()
-): ViewModel() {
-    private val _appTheme = MutableStateFlow(configRepo.getTheme())
-    val appTheme: StateFlow<String> = _appTheme
+) : ViewModel() {
+    val appTheme: StateFlow<String> = configRepo.theme
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = "Auto"
+        )
 
     fun changeTheme() {
         var theme = appTheme.value
-        when(theme) {
+        when (theme) {
             "Auto" -> theme = "Claro"
             "Claro" -> theme = "Oscuro"
             "Oscuro" -> theme = "Claro"
         }
-        configRepo.setTheme(theme)
-        _appTheme.value = theme
+        viewModelScope.launch {
+            configRepo.setTheme(theme)
+        }
+    }
+
+    val username: StateFlow<String> = configRepo.name
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = "Anónimo"
+        )
+
+    fun setUsername(name: String) {
+        viewModelScope.launch {
+            configRepo.setName(name)
+        }
     }
 
     // Estados del formulario de registro
@@ -106,18 +129,52 @@ class FoodRegistryViewModel(
     private val _eventState = MutableStateFlow(FoodRegistryEventState.Empty)
     val eventState: StateFlow<FoodRegistryEventState> = _eventState
 
+    private fun decodeDate(fecha: String): String {
+        val fecha = fecha.split("/")
+        return "${fecha[2]}-${fecha[1]}-${fecha[0]}"
+    }
+
+    fun recodeDate(fecha: String): String {
+        val fecha = fecha.split("-")
+        return "${fecha[2]}/${fecha[1]}/${fecha[0]}"
+    }
+
     fun addFoodRegistry() {
         val foodRegistry = FoodRegistry(
-            fecha = _formState.value.fecha,
+            fecha = decodeDate(_formState.value.fecha),
             tipoId = _formState.value.tipoId,
             descripcion = _formState.value.descripcion,
-            calorias = _formState.value.calorias?.toInt()?:0,
-            carbohidratos = _formState.value.carbohidratos?.toInt()?:0
+            calorias = _formState.value.calorias?.toInt() ?: 0,
+            carbohidratos = _formState.value.carbohidratos?.toInt() ?: 0
         )
-        _foodRegistryRepository.update {
-            it + foodRegistry
-        }
+        dataRepo.addFoodRegistry(foodRegistry)
+        // _eventState.value = FoodRegistryEventState.Success
         resetFormState()
+    }
+
+    fun getFoodRegistries(): List<FoodRegistry> {
+        return dataRepo.getAllFoodRegistry()
+    }
+
+    fun getOverview(): List<OverviewData> {
+        val foodRegistry = getFoodRegistries()
+        val overviewData = mutableListOf<OverviewData>()
+        foodRegistry.forEach {
+            val fecha = it.fecha
+            val indicator = overviewData.find { it.fecha == fecha }
+            if (indicator == null) {
+                overviewData.add(
+                    OverviewData(
+                        fecha,
+                        Indicator(it.calorias, it.carbohidratos)
+                    )
+                )
+            } else {
+                indicator.indicadores.calorias += it.calorias
+                indicator.indicadores.carbohidratos += it.carbohidratos
+            }
+        }
+        return overviewData
     }
 
     // Historial de comidas
@@ -129,7 +186,7 @@ class FoodRegistryViewModel(
     val foodRegistryId: StateFlow<String> = _foodRegistryId
 
     val foodRegistry: StateFlow<FoodRegistry?> = _foodRegistryId.map {
-        _foodRegistryRepository.value.find  { it.id == _foodRegistryId.value }
+        _foodRegistryRepository.value.find { it.id == _foodRegistryId.value }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),

@@ -1,22 +1,47 @@
 package cl.uchile.dcc.mobile.foodregistry.data.repository
 
+import android.content.Context
 import android.content.SharedPreferences
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
+object PreferencesKeys {
+    val THEME_MODE = stringPreferencesKey("TemaActual")
+    val USERNAME = stringPreferencesKey("NombreUsuario")
+    val LANGUAGE = stringPreferencesKey("Idioma")
+    val HOUR_FORMAT = stringPreferencesKey("FormatoHora")
+}
 
 class FoodRegistryAppRepository(
-    private val config: SharedPreferences,
+    private val context: Context,
+    private val config: DataStore<Preferences>,
     private val values: SharedPreferences
 ) {
-    // SharedPreferences: ==> (Clave, Valor)
-    // Clave: String que representa el nombre de la preferencia ("TemaActual")
-    // Valor: Escalar que representa el valor asodiado a la prefencia ("Oscuro", "Claro")
-    // Workspace: ==> Nombre del Espacio de SharedPreferences
 
-    fun getTheme(): String {
-        return config.getString("TemaActual", "Auto")?:"Auto"
+    val theme: Flow<String> = config.data
+        .map { preferences ->
+            preferences[PreferencesKeys.THEME_MODE] ?: "Auto"
+        }
+
+    suspend fun setTheme(theme: String) {
+        config.edit { preferences ->
+            preferences[PreferencesKeys.THEME_MODE] = theme
+        }
     }
 
-    fun setTheme(theme: String) {
-        config.edit().putString("TemaActual", theme).apply()
+    val name: Flow<String> = config.data
+        .map { preferences ->
+            preferences[PreferencesKeys.USERNAME] ?: "Anónimo"
+        }
+
+    suspend fun setName(name: String) {
+        config.edit { preferences ->
+            preferences[PreferencesKeys.USERNAME] = name
+        }
     }
 
     fun getCalories(): Int {

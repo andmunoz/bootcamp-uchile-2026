@@ -26,7 +26,8 @@ fun HistoryScreen(
     viewModel: FoodRegistryViewModel = viewModel(),
     onNavigate: (String) -> Unit = {}
 ) {
-    val itemList by viewModel.foodRegistryRepository.collectAsStateWithLifecycle()
+    // val itemList by viewModel.foodRegistryRepository.collectAsStateWithLifecycle()
+    val itemList = viewModel.getFoodRegistries()
 
     Column(
         modifier = Modifier
@@ -53,7 +54,9 @@ fun HistoryScreen(
                             .padding(8.dp)
                     ) {
                         Text(
-                            text = "Fecha: ${it.fecha}, Calorias: ${it.calorias}, Carbohidratos: ${it.carbohidratos}"
+                            text = "Fecha: ${viewModel.recodeDate(it.fecha)}, Calorias: ${it.calorias}, Carbohidratos: ${it.carbohidratos}",
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier.padding(16.dp)
                         )
                     }
                 }
