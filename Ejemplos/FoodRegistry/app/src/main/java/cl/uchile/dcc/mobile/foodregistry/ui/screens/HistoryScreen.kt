@@ -54,10 +54,44 @@ fun HistoryScreen(
                             .padding(8.dp)
                     ) {
                         Text(
-                            text = "Fecha: ${viewModel.recodeDate(it.fecha)}, Calorias: ${it.calorias}, Carbohidratos: ${it.carbohidratos}",
+                            text = "Fecha: ${viewModel.recodeDate(it.fecha)}",
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(top = 8.dp, bottom = 4.dp, start = 8.dp, end = 8.dp)
                         )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 2.dp, bottom = 2.dp, start = 8.dp, end = 8.dp)
+                        ) {
+                            Text(
+                                text = "${it.tipoId}:",
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.padding(end = 2.dp)
+                            )
+                            Text(
+                                text = "${it.descripcion}",
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.padding(start = 2.dp)
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 4.dp, bottom = 8.dp, start = 8.dp, end = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        )
+                        {
+                            Text(
+                                text = "Calorias: ${it.calorias} kcal",
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.padding(end = 2.dp)
+                            )
+                            Text(
+                                text = "Carbohidratos: ${it.carbohidratos} grs",
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.padding(start = 2.dp)
+                            )
+                        }
                     }
                 }
             }
