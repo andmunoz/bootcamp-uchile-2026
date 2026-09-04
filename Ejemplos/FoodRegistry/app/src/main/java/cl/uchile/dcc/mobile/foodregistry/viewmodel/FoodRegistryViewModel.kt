@@ -3,10 +3,10 @@ package cl.uchile.dcc.mobile.foodregistry.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cl.uchile.dcc.mobile.foodregistry.data.FoodRegistry
+import cl.uchile.dcc.mobile.foodregistry.data.database.FoodRegistry
 import cl.uchile.dcc.mobile.foodregistry.data.Indicator
 import cl.uchile.dcc.mobile.foodregistry.data.OverviewData
-import cl.uchile.dcc.mobile.foodregistry.data.database.FoodDataRepository
+import cl.uchile.dcc.mobile.foodregistry.data.repository.FoodDataRepository
 import cl.uchile.dcc.mobile.foodregistry.data.repository.FoodRegistryAppRepository
 import cl.uchile.dcc.mobile.foodregistry.ui.screenstates.FoodRegistryEventState
 import cl.uchile.dcc.mobile.foodregistry.ui.screenstates.FoodRegistryFormState

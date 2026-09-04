@@ -1,8 +1,9 @@
-package cl.uchile.dcc.mobile.foodregistry.data.database
+package cl.uchile.dcc.mobile.foodregistry.data.repository
 
 import android.content.ContentValues
 import android.content.Context
-import cl.uchile.dcc.mobile.foodregistry.data.FoodRegistry
+import cl.uchile.dcc.mobile.foodregistry.data.database.FoodRegistry
+import cl.uchile.dcc.mobile.foodregistry.data.database_open_helper.FoodOpenHelper
 
 class FoodDataRepository(
     private val context: Context

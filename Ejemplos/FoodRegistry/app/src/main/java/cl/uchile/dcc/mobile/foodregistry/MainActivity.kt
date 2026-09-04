@@ -7,7 +7,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.lifecycle.ViewModelProvider
 import cl.uchile.dcc.mobile.foodregistry.data.repository.FoodRegistryAppRepository
 import cl.uchile.dcc.mobile.foodregistry.ui.screens.FoodRegistryApp
 import cl.uchile.dcc.mobile.foodregistry.ui.theme.FoodRegistryTheme
@@ -16,8 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import cl.uchile.dcc.mobile.foodregistry.data.FoodRegistry
-import cl.uchile.dcc.mobile.foodregistry.data.database.FoodDataRepository
+import cl.uchile.dcc.mobile.foodregistry.data.repository.FoodDataRepository
 
 class MainActivity : ComponentActivity() {
     private lateinit var viewModel: FoodRegistryViewModel

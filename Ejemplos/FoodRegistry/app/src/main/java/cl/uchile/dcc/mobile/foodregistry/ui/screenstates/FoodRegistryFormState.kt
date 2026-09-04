@@ -1,8 +1,7 @@
 package cl.uchile.dcc.mobile.foodregistry.ui.screenstates
 
 import cl.uchile.dcc.mobile.foodregistry.data.DefaultData
-import cl.uchile.dcc.mobile.foodregistry.data.FoodRegistry
-import cl.uchile.dcc.mobile.foodregistry.data.FoodType
+import cl.uchile.dcc.mobile.foodregistry.data.database.FoodType
 
 data class FoodRegistryFormState(
     // Datos del formulario
