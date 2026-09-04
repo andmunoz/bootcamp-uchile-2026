@@ -1,10 +1,10 @@
 package cl.uchile.dcc.mobile.foodregistry.data.database
 
-import androidx.room3.Dao
-import androidx.room3.Delete
-import androidx.room3.Insert
-import androidx.room3.Query
-import androidx.room3.Update
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface FoodRegistryDAO {
@@ -13,11 +13,17 @@ interface FoodRegistryDAO {
     suspend fun addFoodRegistry(foodRegistry: FoodRegistry): Long
 
     // READ
-    @Query("SELECT * FROM FoodRegistry")
+    @Query("SELECT * FROM food_registry ORDER BY fecha DESC")
     suspend fun getAllFoodRegistry(): List<FoodRegistry>
 
-    @Query("SELECT * FROM FoodRegistry WHERE id = :id")
-    suspend fun getOneFoodRegistry(id: String): List<FoodRegistry>
+    @Query("SELECT * FROM food_registry WHERE id = :id")
+    suspend fun getFoodRegistryById(id: String): List<FoodRegistry>
+
+    @Query("SELECT * FROM food_registry WHERE fecha = :fecha")
+    suspend fun getFoodRegistryByDate(fecha: String): List<FoodRegistry>
+
+    @Query("SELECT * FROM food_registry WHERE tipo_id = :tipoId")
+    suspend fun getFoodRegistryByType(tipoId: String): List<FoodRegistry>
 
     // UPDATE
     @Update

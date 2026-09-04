@@ -147,13 +147,19 @@ class FoodRegistryViewModel(
             calorias = _formState.value.calorias?.toInt() ?: 0,
             carbohidratos = _formState.value.carbohidratos?.toInt() ?: 0
         )
-        dataRepo.addFoodRegistry(foodRegistry)
+        viewModelScope.launch {
+            dataRepo.addFoodRegistry(foodRegistry)
+        }
         // _eventState.value = FoodRegistryEventState.Success
         resetFormState()
     }
 
     fun getFoodRegistries(): List<FoodRegistry> {
-        return dataRepo.getAllFoodRegistry()
+        val foodRegistry = mutableListOf<FoodRegistry>()
+        viewModelScope.launch {
+            foodRegistry.addAll(dataRepo.getAllFoodRegistry())
+        }
+        return foodRegistry
     }
 
     fun getOverview(): List<OverviewData> {
