@@ -33,8 +33,8 @@ class MainActivity : ComponentActivity() {
             configPreferences,
             valuesPreferences
         )
-        val configDatabase = FoodDataRepository(applicationContext)
-        viewModel = FoodRegistryViewModel(configRepo, configDatabase)
+        val databaseRepo = FoodDataRepository(applicationContext)
+        viewModel = FoodRegistryViewModel(configRepo, databaseRepo)
         processDeepLink(intent)
 
         setContent {

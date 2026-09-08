@@ -26,8 +26,8 @@ fun HistoryScreen(
     viewModel: FoodRegistryViewModel = viewModel(),
     onNavigate: (String) -> Unit = {}
 ) {
-    // val itemList by viewModel.foodRegistryRepository.collectAsStateWithLifecycle()
-    val itemList = viewModel.getFoodRegistries()
+    viewModel.getFoodRegistries()
+    val itemList by viewModel.foodRegistryList.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier

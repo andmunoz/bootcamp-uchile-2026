@@ -7,11 +7,11 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [FoodRegistry::class, FoodType::class],
-    version = 2,
-    exportSchema = false
+    version = 1,
+    exportSchema = true
 )
 abstract class FoodRegistryDatabase : RoomDatabase() {
-    abstract val foodRegistryDAO: FoodRegistryDAO
+    abstract fun foodRegistryDAO(): FoodRegistryDAO
 
     companion object {
         @Volatile

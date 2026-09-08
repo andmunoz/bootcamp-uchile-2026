@@ -1,5 +1,6 @@
 package cl.uchile.dcc.mobile.foodregistry.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -144,28 +145,33 @@ class FoodRegistryViewModel(
             fecha = decodeDate(_formState.value.fecha),
             tipoId = _formState.value.tipoId,
             descripcion = _formState.value.descripcion,
-            calorias = _formState.value.calorias?.toInt() ?: 0,
-            carbohidratos = _formState.value.carbohidratos?.toInt() ?: 0
+            calorias = _formState.value.calorias?.trim()?.toInt() ?: 0,
+            carbohidratos = _formState.value.carbohidratos?.trim()?.toInt() ?: 0
         )
         viewModelScope.launch {
-            dataRepo.addFoodRegistry(foodRegistry)
+            val id = dataRepo.addFoodRegistry(foodRegistry)
+            Log.d("FoodRegistryViewModel", "Added food registry with id: $id")
         }
         // _eventState.value = FoodRegistryEventState.Success
         resetFormState()
     }
 
-    fun getFoodRegistries(): List<FoodRegistry> {
-        val foodRegistry = mutableListOf<FoodRegistry>()
+    private val _foodRegistryList = MutableStateFlow<List<FoodRegistry>>(emptyList())
+    val foodRegistryList: StateFlow<List<FoodRegistry>> = _foodRegistryList
+
+    fun getFoodRegistries() {
         viewModelScope.launch {
-            foodRegistry.addAll(dataRepo.getAllFoodRegistry())
+            val foodRegistry = dataRepo.getAllFoodRegistry()
+            _foodRegistryList.value = foodRegistry
+            Log.d("FoodRegistryViewModel", "Got ${foodRegistry.size} food registries")
+            Log.d("FoodRegistryViewModel", "Food registries: $foodRegistry")
         }
-        return foodRegistry
     }
 
     fun getOverview(): List<OverviewData> {
-        val foodRegistry = getFoodRegistries()
         val overviewData = mutableListOf<OverviewData>()
-        foodRegistry.forEach {
+        /*
+        foodRegistryList.forEach {
             val fecha = it.fecha
             val indicator = overviewData.find { it.fecha == fecha }
             if (indicator == null) {
@@ -180,6 +186,7 @@ class FoodRegistryViewModel(
                 indicator.indicadores.carbohidratos += it.carbohidratos
             }
         }
+        */
         return overviewData
     }
 
@@ -192,7 +199,7 @@ class FoodRegistryViewModel(
     val foodRegistryId: StateFlow<String> = _foodRegistryId
 
     val foodRegistry: StateFlow<FoodRegistry?> = _foodRegistryId.map {
-        _foodRegistryRepository.value.find { it.id == _foodRegistryId.value }
+        _foodRegistryRepository.value.find { it.id == _foodRegistryId.value.toInt() }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
