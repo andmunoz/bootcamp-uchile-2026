@@ -14,6 +14,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -26,8 +27,7 @@ fun HistoryScreen(
     viewModel: FoodRegistryViewModel = viewModel(),
     onNavigate: (String) -> Unit = {}
 ) {
-    viewModel.getFoodRegistries()
-    val itemList by viewModel.foodRegistryList.collectAsStateWithLifecycle()
+    val itemList by viewModel.foodRegistryList.collectAsState()
 
     Column(
         modifier = Modifier

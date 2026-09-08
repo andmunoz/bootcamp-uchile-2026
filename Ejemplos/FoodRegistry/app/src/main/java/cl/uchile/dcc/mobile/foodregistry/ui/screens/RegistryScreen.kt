@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
@@ -45,6 +46,7 @@ fun RegistryScreen(
     val formState by viewModel.formState.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
+    val focusManager = LocalFocusManager.current
 
     Column(
         modifier = Modifier
@@ -202,7 +204,10 @@ fun RegistryScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             OutlinedButton(
-                onClick = { viewModel.resetFormState() },
+                onClick = {
+                    viewModel.resetFormState()
+                    focusManager.clearFocus()
+                },
                 shape = MaterialTheme.shapes.small,
                 modifier = Modifier
                     .padding(end = 8.dp)
@@ -212,7 +217,10 @@ fun RegistryScreen(
                 Text(text = "Borrar")
             }
             Button(
-                onClick = { viewModel.addFoodRegistry() },
+                onClick = {
+                    viewModel.addFoodRegistry()
+                    focusManager.clearFocus()
+                },
                 shape = MaterialTheme.shapes.small,
                 modifier = Modifier
                     .padding(start = 8.dp)

@@ -15,12 +15,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -32,6 +35,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cl.uchile.dcc.mobile.foodregistry.ui.components.FoodRegistryNavigationDrawer
 import cl.uchile.dcc.mobile.foodregistry.ui.components.MainBottomNavigation
+import cl.uchile.dcc.mobile.foodregistry.ui.screenstates.FoodRegistryEventState
 import cl.uchile.dcc.mobile.foodregistry.viewmodel.FoodRegistryViewModel
 import kotlinx.coroutines.launch
 
@@ -43,9 +47,21 @@ fun FoodRegistryApp(
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarEvent by viewModel.eventState.collectAsState(initial = null)
     val scope = rememberCoroutineScope()
-
     val foodRegistryId by viewModel.foodRegistryId.collectAsStateWithLifecycle()
+
+    LaunchedEffect(snackbarEvent) {
+        snackbarEvent?.let { event ->
+            when(event) {
+                is FoodRegistryEventState.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(
+                        message = event.message
+                    )
+                }
+            }
+        }
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -118,11 +134,13 @@ fun FoodRegistryApp(
                 )
             },
             snackbarHost = {
-                // PENDIENTE
+                SnackbarHost(snackbarHostState)
             }
         ) { innerPadding ->
             Column(
-                modifier = Modifier.fillMaxSize().padding(innerPadding)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
             ) {
                 val startDestination = ScreenRoutes.OVERVIEW.route
                 if (foodRegistryId.isNotEmpty()) {

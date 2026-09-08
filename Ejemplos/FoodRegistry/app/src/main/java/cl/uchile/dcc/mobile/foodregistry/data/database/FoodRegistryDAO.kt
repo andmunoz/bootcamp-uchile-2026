@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FoodRegistryDAO {
@@ -14,16 +15,16 @@ interface FoodRegistryDAO {
 
     // READ
     @Query("SELECT * FROM food_registry ORDER BY fecha DESC")
-    suspend fun getAllFoodRegistry(): List<FoodRegistry>
+    fun getAllFoodRegistry(): Flow<List<FoodRegistry>>
 
     @Query("SELECT * FROM food_registry WHERE id = :id")
-    suspend fun getFoodRegistryById(id: String): List<FoodRegistry>
+    fun getFoodRegistryById(id: String): Flow<List<FoodRegistry>>
 
     @Query("SELECT * FROM food_registry WHERE fecha = :fecha")
-    suspend fun getFoodRegistryByDate(fecha: String): List<FoodRegistry>
+    fun getFoodRegistryByDate(fecha: String): Flow<List<FoodRegistry>>
 
     @Query("SELECT * FROM food_registry WHERE tipo_id = :tipoId")
-    suspend fun getFoodRegistryByType(tipoId: String): List<FoodRegistry>
+    fun getFoodRegistryByType(tipoId: String): Flow<List<FoodRegistry>>
 
     // UPDATE
     @Update

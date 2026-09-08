@@ -30,7 +30,8 @@ fun OverviewScreen(
     val theme = viewModel.appTheme.collectAsState().value
     val username = viewModel.username.collectAsState().value
     var name by remember { mutableStateOf("") }
-    var overview = viewModel.getOverview()
+    val foodRegistryList by viewModel.foodRegistryList.collectAsState()
+    val overview = viewModel.getOverview(foodRegistryList)
 
     Column(
         modifier = Modifier
@@ -96,7 +97,7 @@ fun OverviewScreen(
                     .padding(8.dp)
             ) {
                 Text(
-                    text = "Fecha: ${viewModel.recodeDate(it.fecha)}",
+                    text = "Fecha: ${viewModel.recodeDate(it.fecha)} (${it.registros} registros)",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier

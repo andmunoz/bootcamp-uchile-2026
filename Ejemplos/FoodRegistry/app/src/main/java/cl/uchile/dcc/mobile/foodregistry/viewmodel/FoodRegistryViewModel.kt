@@ -11,13 +11,17 @@ import cl.uchile.dcc.mobile.foodregistry.data.repository.FoodDataRepository
 import cl.uchile.dcc.mobile.foodregistry.data.repository.FoodRegistryAppRepository
 import cl.uchile.dcc.mobile.foodregistry.ui.screenstates.FoodRegistryEventState
 import cl.uchile.dcc.mobile.foodregistry.ui.screenstates.FoodRegistryFormState
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.collections.emptyList
 
 class FoodRegistryViewModel(
     private val configRepo: FoodRegistryAppRepository,
@@ -127,8 +131,8 @@ class FoodRegistryViewModel(
     }
 
     // Eventos del formulario de registro
-    private val _eventState = MutableStateFlow(FoodRegistryEventState.Empty)
-    val eventState: StateFlow<FoodRegistryEventState> = _eventState
+    private val _eventState = MutableSharedFlow<FoodRegistryEventState>()
+    val eventState: SharedFlow<FoodRegistryEventState> = _eventState.asSharedFlow()
 
     private fun decodeDate(fecha: String): String {
         val fecha = fecha.split("/")
@@ -140,37 +144,30 @@ class FoodRegistryViewModel(
         return "${fecha[2]}/${fecha[1]}/${fecha[0]}"
     }
 
+    val foodRegistryList: StateFlow<List<FoodRegistry>> = dataRepo.getAllFoodRegistry()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = emptyList()
+        )
+
     fun addFoodRegistry() {
         val foodRegistry = FoodRegistry(
-            fecha = decodeDate(_formState.value.fecha),
+            fecha = decodeDate(_formState.value.fecha).trim(),
             tipoId = _formState.value.tipoId,
-            descripcion = _formState.value.descripcion,
+            descripcion = _formState.value.descripcion?.trim(),
             calorias = _formState.value.calorias?.trim()?.toInt() ?: 0,
             carbohidratos = _formState.value.carbohidratos?.trim()?.toInt() ?: 0
         )
         viewModelScope.launch {
             val id = dataRepo.addFoodRegistry(foodRegistry)
-            Log.d("FoodRegistryViewModel", "Added food registry with id: $id")
+            _eventState.emit(FoodRegistryEventState.ShowSnackbar("Registro agregado con ID: $id"))
         }
-        // _eventState.value = FoodRegistryEventState.Success
         resetFormState()
     }
 
-    private val _foodRegistryList = MutableStateFlow<List<FoodRegistry>>(emptyList())
-    val foodRegistryList: StateFlow<List<FoodRegistry>> = _foodRegistryList
-
-    fun getFoodRegistries() {
-        viewModelScope.launch {
-            val foodRegistry = dataRepo.getAllFoodRegistry()
-            _foodRegistryList.value = foodRegistry
-            Log.d("FoodRegistryViewModel", "Got ${foodRegistry.size} food registries")
-            Log.d("FoodRegistryViewModel", "Food registries: $foodRegistry")
-        }
-    }
-
-    fun getOverview(): List<OverviewData> {
+    fun getOverview(foodRegistryList: List<FoodRegistry>): List<OverviewData> {
         val overviewData = mutableListOf<OverviewData>()
-        /*
         foodRegistryList.forEach {
             val fecha = it.fecha
             val indicator = overviewData.find { it.fecha == fecha }
@@ -178,15 +175,16 @@ class FoodRegistryViewModel(
                 overviewData.add(
                     OverviewData(
                         fecha,
+                        1,
                         Indicator(it.calorias, it.carbohidratos)
                     )
                 )
             } else {
+                indicator.registros += 1
                 indicator.indicadores.calorias += it.calorias
                 indicator.indicadores.carbohidratos += it.carbohidratos
             }
         }
-        */
         return overviewData
     }
 

@@ -28,12 +28,5 @@ abstract class FoodRegistryDatabase : RoomDatabase() {
                 instance
             }
         }
-
-        /*
-            val MIGRATION_1_TO_2 = object : Migration(1, 2) {
-            override suspend fun migrate(connection: SQLiteConnection) {
-                connection.execSQL("ALTER TABLE FoodRegistry ADD COLUMN tipo_id TEXT")
-            }
-         */
     }
 }
