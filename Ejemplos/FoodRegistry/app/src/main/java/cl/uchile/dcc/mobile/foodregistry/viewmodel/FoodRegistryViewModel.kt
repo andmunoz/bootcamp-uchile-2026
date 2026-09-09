@@ -1,7 +1,5 @@
 package cl.uchile.dcc.mobile.foodregistry.viewmodel
 
-import android.util.Log
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cl.uchile.dcc.mobile.foodregistry.data.database.FoodRegistry
@@ -18,7 +16,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,8 +23,7 @@ import kotlin.collections.emptyList
 
 class FoodRegistryViewModel(
     private val configRepo: FoodRegistryAppRepository,
-    private val dataRepo: FoodDataRepository,
-    private val savedStateHandle: SavedStateHandle = SavedStateHandle()
+    private val dataRepo: FoodDataRepository
 ) : ViewModel() {
     val appTheme: StateFlow<String> = configRepo.theme
         .stateIn(
@@ -67,9 +63,9 @@ class FoodRegistryViewModel(
 
     private fun maskDate(fecha: String): String {
         val fecha = fecha.replace("/", "")
-        var day = ""
-        var month = ""
-        var year = ""
+        var day: String
+        var month: String
+        var year: String
 
         if (fecha.length <= 2) {
             day = fecha
@@ -194,25 +190,5 @@ class FoodRegistryViewModel(
             }
         }
         return overviewData
-    }
-
-    // Historial de comidas
-    private val _foodRegistryRepository = MutableStateFlow<List<FoodRegistry>>(emptyList())
-    val foodRegistryRepository: StateFlow<List<FoodRegistry>> = _foodRegistryRepository
-
-    private val _foodRegistryId = savedStateHandle
-        .getStateFlow("foodRegistryId", "")
-    val foodRegistryId: StateFlow<String> = _foodRegistryId
-
-    val foodRegistry: StateFlow<FoodRegistry?> = _foodRegistryId.map {
-        _foodRegistryRepository.value.find { it.id == _foodRegistryId.value.toInt() }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = null
-    )
-
-    fun setFoodRegistryId(id: String) {
-        savedStateHandle["foodRegistryId"] = id
     }
 }

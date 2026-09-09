@@ -8,7 +8,7 @@ import cl.uchile.dcc.mobile.foodregistry.data.database.FoodRegistryDatabase
 import cl.uchile.dcc.mobile.foodregistry.data.database.FoodType
 
 class FoodDataRepository(
-    private val context: Context
+    context: Context
 ) {
     private val database = FoodRegistryDatabase.getInstance(context)
     private val foodRegistryDAO = database.foodRegistryDAO()

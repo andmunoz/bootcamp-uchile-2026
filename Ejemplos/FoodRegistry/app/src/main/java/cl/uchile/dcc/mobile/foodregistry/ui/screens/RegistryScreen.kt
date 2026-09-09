@@ -45,8 +45,7 @@ import cl.uchile.dcc.mobile.foodregistry.viewmodel.FoodRegistryViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistryScreen(
-    viewModel: FoodRegistryViewModel = viewModel(),
-    onNavigate: (String) -> Unit = {}
+    viewModel: FoodRegistryViewModel = viewModel()
 ) {
     val formState by viewModel.formState.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
