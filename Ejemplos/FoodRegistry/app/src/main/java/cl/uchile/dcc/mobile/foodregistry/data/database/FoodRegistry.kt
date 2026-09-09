@@ -12,7 +12,7 @@ data class FoodRegistry(
     @ColumnInfo(name = "fecha")
     val fecha: String, // Formato "dd/MM/yyyy"
     @ColumnInfo(name = "tipo_id")
-    val tipoId: String,
+    val tipoId: Int,
     @ColumnInfo(name = "descripcion")
     val descripcion: String?,
     @ColumnInfo(name = "calorias")

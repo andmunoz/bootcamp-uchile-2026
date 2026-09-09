@@ -14,6 +14,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +42,7 @@ import androidx.compose.ui.window.Popup
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cl.uchile.dcc.mobile.foodregistry.viewmodel.FoodRegistryViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistryScreen(
     viewModel: FoodRegistryViewModel = viewModel(),
@@ -47,6 +52,7 @@ fun RegistryScreen(
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
     val focusManager = LocalFocusManager.current
+    val foodTypeList by viewModel.foodTypeList.collectAsState()
 
     Column(
         modifier = Modifier
@@ -115,24 +121,44 @@ fun RegistryScreen(
             }
         }
 
-        OutlinedTextField(
-            value = formState.tipoId,
-            onValueChange = {
-                viewModel.setTipo(it)
-            },
-            label = {
-                Text("Tipo de Comida")
-            },
-            colors = TextFieldDefaults.colors(
-                focusedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                unfocusedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                focusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        )
+        var expanded by remember { mutableStateOf(false) }
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { expanded = !expanded }
+        ) {
+            OutlinedTextField(
+                value = formState.tipoId.toString(),
+                onValueChange = { },
+                label = {
+                    Text("Tipo de Comida")
+                },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    focusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            )
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                foodTypeList.forEach { type ->
+                    DropdownMenuItem(
+                        text = { Text(type.name) },
+                        onClick = {
+                            viewModel.setTipo(type.id)
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+
         OutlinedTextField(
             value = formState.descripcion?:"",
             onValueChange = {

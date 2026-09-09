@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import cl.uchile.dcc.mobile.foodregistry.data.database.FoodRegistry
 import cl.uchile.dcc.mobile.foodregistry.data.Indicator
 import cl.uchile.dcc.mobile.foodregistry.data.OverviewData
+import cl.uchile.dcc.mobile.foodregistry.data.database.FoodType
 import cl.uchile.dcc.mobile.foodregistry.data.repository.FoodDataRepository
 import cl.uchile.dcc.mobile.foodregistry.data.repository.FoodRegistryAppRepository
 import cl.uchile.dcc.mobile.foodregistry.ui.screenstates.FoodRegistryEventState
@@ -100,7 +101,7 @@ class FoodRegistryViewModel(
         }
     }
 
-    fun setTipo(tipo: String) {
+    fun setTipo(tipo: Int) {
         _formState.update {
             it.copy(
                 tipoId = tipo
@@ -136,6 +137,7 @@ class FoodRegistryViewModel(
 
     private fun decodeDate(fecha: String): String {
         val fecha = fecha.split("/")
+        if (fecha.size != 3) return fecha.joinToString("")
         return "${fecha[2]}-${fecha[1]}-${fecha[0]}"
     }
 
@@ -145,6 +147,12 @@ class FoodRegistryViewModel(
     }
 
     val foodRegistryList: StateFlow<List<FoodRegistry>> = dataRepo.getAllFoodRegistry()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = emptyList()
+        )
+    val foodTypeList: StateFlow<List<FoodType>> = dataRepo.getFoodType()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),

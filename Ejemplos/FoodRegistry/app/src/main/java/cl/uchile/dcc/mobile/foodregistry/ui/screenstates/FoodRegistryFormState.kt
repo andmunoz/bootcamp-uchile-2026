@@ -6,7 +6,7 @@ import cl.uchile.dcc.mobile.foodregistry.data.database.FoodType
 data class FoodRegistryFormState(
     // Datos del formulario
     val fecha: String = "",
-    val tipoId: String = "",
+    val tipoId: Int = 0,
     val descripcion: String? = null,
     val calorias: String? = null,
     val carbohidratos: String? = null,
