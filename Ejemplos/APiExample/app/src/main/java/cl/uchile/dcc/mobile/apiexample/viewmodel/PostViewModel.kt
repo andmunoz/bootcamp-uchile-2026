@@ -1,5 +1,6 @@
 package cl.uchile.dcc.mobile.apiexample.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cl.uchile.dcc.mobile.apiexample.data.Post
@@ -16,7 +17,12 @@ class PostViewModel(
 
     fun loadPosts() {
         viewModelScope.launch {
-            _postsList.value = repository.getPosts()
+            try {
+                _postsList.value = repository.getPosts()
+            } catch (e: Exception) {
+                Log.e("PostViewModel", "Error al cargar los posts (${e.message})", e)
+                _postsList.value = emptyList()
+            }
         }
     }
 }
