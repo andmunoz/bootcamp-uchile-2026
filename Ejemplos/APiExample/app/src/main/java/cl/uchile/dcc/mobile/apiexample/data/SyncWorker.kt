@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 
-class SyncWorker @JvmOverloads constructor(
+class SyncWorker(
     context: Context,
     params: WorkerParameters,
-    private val postRepository: PostRepository = PostRepository()
+    private val postRepository: PostRepository
 ): CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
         return try {

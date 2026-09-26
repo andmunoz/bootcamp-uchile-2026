@@ -1,4 +1,4 @@
-package cl.uchile.dcc.mobile.apiexample.data
+package cl.uchile.dcc.mobile.apiexample.data.api
 
 sealed class PostApiResponse<out T> {
     data class Success<out T>(val data: T) : PostApiResponse<T>()

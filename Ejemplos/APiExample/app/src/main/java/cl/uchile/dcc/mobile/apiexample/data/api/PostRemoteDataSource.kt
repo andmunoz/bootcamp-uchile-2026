@@ -1,4 +1,4 @@
-package cl.uchile.dcc.mobile.apiexample.data
+package cl.uchile.dcc.mobile.apiexample.data.api
 
 import android.util.Log
 import retrofit2.Response
@@ -28,15 +28,6 @@ class PostRemoteDataSource {
             return response.data
         } else {
             throw Exception("Error al obtener el post")
-        }
-    }
-
-    suspend fun getPostByUserId(userId: Int): List<Post> {
-        val response = safeApiCall { apiService.getPostsByUserId(userId) }
-        if (response is PostApiResponse.Success) {
-            return response.data
-        } else {
-            throw Exception("Error al obtener los posts del usuario")
         }
     }
 
