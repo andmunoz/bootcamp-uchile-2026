@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.squareup.retrofit2.retrofit)
     implementation(libs.squareup.retrofit2.converter.gson)
     implementation(libs.squareup.okhttp3.logging.interceptor)
+    implementation(libs.androidx.work.runtime.ktx)
 
     testImplementation(libs.junit)
 

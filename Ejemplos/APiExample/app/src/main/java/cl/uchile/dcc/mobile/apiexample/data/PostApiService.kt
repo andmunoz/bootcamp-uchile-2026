@@ -9,39 +9,42 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.Response
+import retrofit2.http.Header
 
 interface PostApiService {
-    @GET("/posts")          // Método HTTP GET
-    suspend fun getPosts(): List<Post>
+    @GET("posts/records")          // HTTP GET
+    suspend fun getPosts(
+        @Header("Authorization") token: String
+    ): Response<PostResult>
 
-    @GET("/posts/{id}")     // Método HTTP GET
+    @GET("/posts/records/{id}")     // HTTP GET
     suspend fun getPostById(
         @Path("id") id: Int
     ): Response<Post>
 
-    @GET("/posts")
+    @GET("/posts/records")          // HTTP GET
     suspend fun getPostsByUserId(
         @Query("userId") userId: Int
     ): Response<List<Post>>
 
-    @POST("/posts")         // Método HTTP POST
+    @POST("/posts")         // HTTP POST
     suspend fun createPost(
         @Body post: Post
-    ): Post
+    ): Response<Post>
 
-    @PUT("/posts/{id}")     // Método HTTP PUT
+    @PUT("/posts/{id}")     // HTTP PUT
     suspend fun updatePost(
         @Path("id") id: Int,
         @Body post: Post
-    ): Post
+    ): Response<Post>
 
-    @PATCH("/posts/{id}")   // Método HTTP PATCH
+    @PATCH("/posts/{id}")   // HTTP PATCH
     suspend fun patchPost(
         @Path("id") id: Int,
         @Body attributes: Map<String, String>
-    ): Post
+    ): Response<Post>
 
-    @DELETE("/posts/{id}")  // Método HTTP DELETE
+    @DELETE("/posts/{id}")  // HTTP DELETE
     suspend fun deletePost(
         @Path("id") id: Int
     )
