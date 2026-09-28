@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 
-class SyncWorker(
+class PostSyncWorker(
     context: Context,
     params: WorkerParameters,
     private val postRepository: PostRepository

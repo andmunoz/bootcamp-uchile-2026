@@ -8,46 +8,41 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cl.uchile.dcc.mobile.apiexample.R
+import cl.uchile.dcc.mobile.apiexample.ui.screens.PostListScreen
 import cl.uchile.dcc.mobile.apiexample.viewmodel.PostViewModel
 
 @Composable
-fun PostsScreenApp(viewModel: PostViewModel, modifier: Modifier = Modifier) {
-    val post by viewModel.postList.collectAsStateWithLifecycle()
-    // val syncStatus by viewModel.observeSyncStatus(LocalContext.current).collectAsState(initial = null)
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Button(
-                onClick = { viewModel.refreshPosts() }
+fun PostsScreenApp(
+    viewModel: PostViewModel,
+    modifier: Modifier = Modifier
+) {
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        topBar = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text(text = "Cargar Artículos")
+                Text(text = stringResource(R.string.app_name))
             }
-        }
-        /* when (syncStatus?.state) {
-            WorkInfo.State.RUNNING -> Text("Sincronizando...")
-            WorkInfo.State.SUCCEEDED -> Text("Sincronización exitosa!")
-            WorkInfo.State.FAILED -> Text("Sincronización fallida!")
-            else -> {}
-        } */
-        LazyColumn(
-            modifier = modifier.fillMaxSize()
-        ) {
-            items(post.size) { index ->
-                Text(
-                    modifier = modifier.padding(8.dp),
-                    text = post[index].title.trim()
-                )
-            }
-        }
-    }
+        },
+        content = { innerPadding ->
+            PostListScreen(
+                viewModel = viewModel,
+                modifier = Modifier.padding(innerPadding)
+            )
+        },
+        bottomBar = {
+        },
+    )
 }
