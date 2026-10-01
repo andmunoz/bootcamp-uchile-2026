@@ -2,6 +2,7 @@ package cl.uchile.dcc.mobile.apiexample.data.cache
 
 import android.content.Context
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 
 class PostLocalDataSource(
     context: Context
@@ -10,14 +11,8 @@ class PostLocalDataSource(
     private val postDao = database.postDao()
 
     fun getPosts(): Flow<List<Post>> = postDao.getAllPosts()
-    fun getPost(id: String): Flow<Post> = postDao.getPostById(id)
-
-    suspend fun updateAllPosts(posts: List<Post>) {
-        // IMPLEMENTAR RESOLUCIÓN DE CONFLICTOS
-        // Caso 1: Nuevo Post Local => Sincronizar HACIA la nube
-        // Caso 2: Post Local Eliminado => ?
-        // Caso 3: Post Local Actualizado => Sincronizar HACIA la nube
-        // Caso 4: Post Local y Remoto Actualizados => ?
-        postDao.addAllPost(posts)
-    }
+    fun getPost(id: Int): Flow<Post> = postDao.getPostById(id)
+    suspend fun addPost(post: Post) = postDao.addPost(post)
+    suspend fun updatePost(post: Post) = postDao.updatePost(post)
+    suspend fun deletePost(post: Post) = postDao.deletePost(post)
 }

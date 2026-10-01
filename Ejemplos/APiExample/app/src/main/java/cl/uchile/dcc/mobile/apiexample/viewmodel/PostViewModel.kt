@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cl.uchile.dcc.mobile.apiexample.data.cache.Post
 import cl.uchile.dcc.mobile.apiexample.data.PostRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -25,6 +26,9 @@ class PostViewModel(
     init {
         refreshPosts()
     }
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing
 
     fun refreshPosts() {
         viewModelScope.launch {

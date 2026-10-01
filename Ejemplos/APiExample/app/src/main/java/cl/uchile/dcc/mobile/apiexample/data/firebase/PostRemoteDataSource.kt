@@ -1,5 +1,6 @@
 package cl.uchile.dcc.mobile.apiexample.data.firebase
 
+import android.util.Log
 import cl.uchile.dcc.mobile.apiexample.data.cache.Post
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -7,6 +8,7 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import java.util.Collections.emptyList
 
 class PostRemoteDataSource {
     private val database = FirebaseConfig.database
@@ -25,9 +27,12 @@ class PostRemoteDataSource {
     suspend fun getPosts(): Result<List<Post>> {
         return try {
             val snapshot = FirebaseConfig.getPostsRef().get().await()
-            val posts = snapshot.children.mapNotNull { it.getValue(Post::class.java) }
+            val posts = snapshot.children.mapNotNull {
+                it.getValue(Post::class.java)
+            }
             Result.success(posts)
         } catch (e: Exception) {
+            Log.e("PostRemoteDataSource", "getPosts: $e")
             Result.failure(e)
         }
     }

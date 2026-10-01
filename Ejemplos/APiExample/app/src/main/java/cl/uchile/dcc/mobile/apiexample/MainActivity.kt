@@ -1,3 +1,5 @@
+@file:Suppress("KaptKotlinCompilerPlugin")
+
 package cl.uchile.dcc.mobile.apiexample
 
 import android.os.Bundle

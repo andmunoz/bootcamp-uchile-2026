@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +34,11 @@ fun PostsScreenApp(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text(text = stringResource(R.string.app_name))
+                Text(
+                    text = stringResource(R.string.app_name),
+                    modifier = Modifier.padding(8.dp),
+                    style = MaterialTheme.typography.titleLarge
+                )
             }
         },
         content = { innerPadding ->

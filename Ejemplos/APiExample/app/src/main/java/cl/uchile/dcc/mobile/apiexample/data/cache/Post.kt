@@ -11,13 +11,13 @@ data class Post(
     @ColumnInfo(name = "remoteId")
     val remoteId: String = "",
     @ColumnInfo(name = "title")
-    val title: String,
+    val title: String = "",
     @ColumnInfo(name = "description")
-    val description: String,
+    val description: String = "",
     @ColumnInfo(name = "active")
-    val active: Boolean,
+    val active: Boolean = false,
     @ColumnInfo(name = "created")
-    val created: String,
+    val created: String = "",
     @ColumnInfo(name = "updated")
-    val updated: String,
+    val updated: String = "",
 )

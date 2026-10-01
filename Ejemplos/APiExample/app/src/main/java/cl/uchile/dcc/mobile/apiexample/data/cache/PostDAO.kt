@@ -19,7 +19,7 @@ interface PostDAO {
     fun getAllPosts(): Flow<List<Post>>
 
     @Query("SELECT * FROM posts WHERE id = :id")
-    fun getPostById(id: String): Flow<Post>
+    fun getPostById(id: Int): Flow<Post>
 
     @Update
     suspend fun updatePost(post: Post)
