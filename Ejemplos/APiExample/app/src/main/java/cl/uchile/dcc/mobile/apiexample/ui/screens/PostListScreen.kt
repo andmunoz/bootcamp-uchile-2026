@@ -35,6 +35,11 @@ fun PostListScreen(
             ) {
                 Text(text = "Cargar Artículos")
             }
+            Button(
+                onClick = { viewModel.addPost() }
+            ) {
+                Text(text = "Agregar Artículo")
+            }
         }
         /* when (syncStatus?.state) {
             WorkInfo.State.RUNNING -> Text("Sincronizando...")

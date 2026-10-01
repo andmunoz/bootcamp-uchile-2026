@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import cl.uchile.dcc.mobile.apiexample.data.PostRepository
-import cl.uchile.dcc.mobile.apiexample.data.api.PostRemoteDataSource
+import cl.uchile.dcc.mobile.apiexample.data.firebase.PostRemoteDataSource
 import cl.uchile.dcc.mobile.apiexample.data.cache.PostLocalDataSource
 import cl.uchile.dcc.mobile.apiexample.ui.PostsScreenApp
 import cl.uchile.dcc.mobile.apiexample.ui.theme.APiExampleTheme

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -52,14 +53,23 @@ dependencies {
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.icons.core)
     implementation(libs.androidx.compose.icons.extended)
+
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.core)
+
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.compiler)
+
     implementation(libs.squareup.retrofit2.retrofit)
     implementation(libs.squareup.retrofit2.converter.gson)
     implementation(libs.squareup.okhttp3.logging.interceptor)
+
     implementation(libs.androidx.work.runtime.ktx)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.database)
+
     ksp(libs.androidx.room.compiler) {
         exclude(group = "com.intellij", module = "annotations")
     }

@@ -35,4 +35,23 @@ class PostViewModel(
             }
         }
     }
+
+    fun addPost() {
+        val post = Post(
+            id = 1,
+            remoteId = "001",
+            title = "Hola Mundo",
+            description = "Esto es un post de pruebas",
+            active = true,
+            created = "",
+            updated = ""
+        )
+        viewModelScope.launch {
+            try {
+                repository.addPost(post)
+            } catch (e: Exception) {
+                Log.e("PostViewModel", "Error al agregar (${e.message})")
+            }
+        }
+    }
 }

@@ -1,7 +1,5 @@
 package cl.uchile.dcc.mobile.apiexample.data.api
 
-import android.text.style.ImageSpan
-
 data class PostResult (
     val items: List<Post>,
     val page: Int,
