@@ -2,7 +2,6 @@ package cl.uchile.dcc.mobile.apiexample.data.cache
 
 import android.content.Context
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 
 class PostLocalDataSource(
     context: Context

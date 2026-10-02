@@ -19,39 +19,36 @@ class PostRepository(
             Log.d("PostRepository", "Actualizando caché")
             val remotePosts = remoteDataSource.getPosts().getOrNull()
             Log.d("PostRepository", "${remotePosts?.size} posts obtenidos")
-            for (post in remotePosts!!) {
-                Log.d("PostRepository", "Post: ${post.title}")
-                Post(
-                    id = post.id,
-                    remoteId = post.remoteId,
-                    title = post.title,
-                    description = post.description,
-                    active = post.active,
-                    created = post.created,
-                    updated = post.updated
-                )
-            }
 
             // Sincronizar desde Local al Remoto
+            Log.d("PostRepository", "Guardando post locales en remoto")
             val localPosts = localDataSource.getPosts().firstOrNull()
+            var counter = 0
             localPosts?.forEach { post ->
-                val p = remotePosts.firstOrNull { it.id == post.id }
+                val p = remotePosts?.firstOrNull { it.id == post.id }
                 if (p == null) {
-                    val t = remoteDataSource.addPost(post)
+                    val r = remoteDataSource.addPost(post)
+                    counter++
                 }
             }
+            Log.d("PostRepository", "$counter posts locales fueron guardados en remoto")
 
             // Sincronizar desde RTDB a Local
-            remotePosts.forEach { post ->
+            Log.d("PostRepository", "Actualizando post remotos en local")
+            var addCounter = 0
+            var updateCounter = 0
+            remotePosts?.forEach { post ->
                 val p = localDataSource.getPost(post.id).firstOrNull()
                 if (p == null) {
                     localDataSource.addPost(post)
+                    addCounter++
                 } else {
                     localDataSource.updatePost(post)
+                    updateCounter++
                 }
             }
-
-            Log.d("PostRepository", "Caché actualizado")
+            Log.d("PostRepository", "$addCounter posts remotos fueron agregados en local")
+            Log.d("PostRepository", "$updateCounter posts remotos fueron actualizados en local")
         } catch (e: Exception) {
             Log.e("PostRepository", "Error al obtener los posts del usuario (${e.message})")
         }
@@ -60,7 +57,7 @@ class PostRepository(
     suspend fun addPost(post: Post) {
         try {
             Log.d("PostRepository", "Agregando post")
-            val newPost = remoteDataSource.addPost(post).getOrNull()
+            localDataSource.addPost(post)
             Log.d("PostRepository", "Post agregado")
         } catch (e: Exception) {
             Log.e("PostRepository", "Error al agregar el post (${e.message})")

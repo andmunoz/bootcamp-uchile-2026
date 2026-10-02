@@ -9,13 +9,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -40,9 +42,17 @@ fun PostListScreen(
             horizontalArrangement = Arrangement.End
         ) {
             IconButton(
-                onClick = { viewModel.refreshPosts() }
+                onClick = { viewModel.refreshPosts() },
+                enabled = !isRefreshing,
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
             ) {
-                Icon(Icons.Filled.Refresh, contentDescription = "Actualizar")
+                Icon(
+                    imageVector = Icons.Filled.Refresh,
+                    contentDescription = "Actualizar"
+                )
             }
         }
         /* when (syncStatus?.state) {
@@ -57,12 +67,23 @@ fun PostListScreen(
                 viewModel.refreshPosts()
             }
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
+            if (post.isEmpty()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(text = "No hay publicaciones")
+                }
+            }
+            else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
 
-            ) {
-                items(post.size) { index ->
-                    CardBlog(post[index], viewModel)
+                ) {
+                    items(post.size) { index ->
+                        CardBlog(post[index], viewModel)
+                    }
                 }
             }
         }

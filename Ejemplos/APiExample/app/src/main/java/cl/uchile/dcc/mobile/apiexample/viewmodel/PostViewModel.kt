@@ -11,6 +11,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class PostViewModel(
     private val repository: PostRepository
@@ -33,7 +36,9 @@ class PostViewModel(
     fun refreshPosts() {
         viewModelScope.launch {
             try {
+                _isRefreshing.value = true
                 repository.refreshPost()
+                _isRefreshing.value = false
             } catch (e: Exception) {
                 Log.e("PostViewModel", "Error al refrescar (${e.message})")
             }
@@ -41,14 +46,13 @@ class PostViewModel(
     }
 
     fun addPost() {
+        val dateFormater = SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault())
         val post = Post(
-            id = 1,
-            remoteId = "001",
             title = "Hola Mundo",
             description = "Esto es un post de pruebas",
             active = true,
-            created = "",
-            updated = ""
+            created = dateFormater.format(Date()),
+            updated = dateFormater.format(Date())
         )
         viewModelScope.launch {
             try {

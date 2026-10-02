@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "posts")
 data class Post(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    var id: Int = 0,
     @ColumnInfo(name = "remoteId")
     val remoteId: String = "",
     @ColumnInfo(name = "title")

@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,9 +20,15 @@ fun CardBlog(
     post: Post,
     viewModel: PostViewModel
 ) {
+    var containerColor = MaterialTheme.colorScheme.surfaceVariant
+    if (post.remoteId == "")
+        containerColor = MaterialTheme.colorScheme.errorContainer
     Card(
         modifier = Modifier.fillMaxWidth()
             .padding(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = containerColor
+        ),
         content = {
             Column(
                 modifier = Modifier.fillMaxWidth()
@@ -35,10 +43,10 @@ fun CardBlog(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Creado el ${post.created}"
+                        text = "Creado el ${post.created.substring(0, 10)}"
                     )
                     Text(
-                        text = "Actualizado el ${post.updated}"
+                        text = "Actualizado el ${post.updated.substring(0, 10)}"
                     )
                 }
             }
