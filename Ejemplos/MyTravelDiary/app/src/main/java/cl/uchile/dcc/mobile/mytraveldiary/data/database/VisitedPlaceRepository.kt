@@ -1,4 +1,4 @@
-package cl.uchile.dcc.mobile.mytraveldiary.data
+package cl.uchile.dcc.mobile.mytraveldiary.data.database
 
 class VisitedPlaceRepository {
     val visitedPlaces = listOf<VisitedPlace>(
