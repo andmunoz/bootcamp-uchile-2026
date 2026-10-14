@@ -8,12 +8,14 @@ lifecycleRuntimeKtx = "2.11.0"
 activityCompose = "1.13.0"
 kotlin = "2.4.21"
 composeBom = "2026.09.00"
-mapsCompose = "9.0.0"
-playServicesMaps = "20.0.0"
+mapsCompose = "9.0.1"
+playServicesMaps = "20.1.0"
 playServicesLocation = "21.4.0"
 playServicesCourutines = "1.11.0"
 roomKtx = "2.8.5"
 composeMaterial = "1.7.8"
+cameraxVersion = "1.6.2"
+coilVersion = "3.6.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,6 +39,11 @@ kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "ko
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 androidx-compose-icons-core = { group = "androidx.compose.material", name = "material-icons-core", version.ref = "composeMaterial" }
 androidx-compose-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "composeMaterial" }
+camera-camerax = { group = "androidx.camera", name = "camera-camera2", version.ref = "cameraxVersion" }
+camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "cameraxVersion" }
+camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "cameraxVersion" }
+camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "cameraxVersion" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coilVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

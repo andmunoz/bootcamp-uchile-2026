@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cl.uchile.dcc.mobile.mytraveldiary.data.database.VisitedPlace
 import cl.uchile.dcc.mobile.mytraveldiary.data.database.VisitedPlaceRepository
 import cl.uchile.dcc.mobile.mytraveldiary.data.location.LocationData
 import cl.uchile.dcc.mobile.mytraveldiary.data.location.LocationRepository
@@ -30,7 +31,33 @@ class PlacesViewModel (
     // Markers
     val visitedPlaces = visitedPlaceRepository.getPlaces()
 
+    private val _selectedPlace = MutableStateFlow<VisitedPlace?>(null)
+    val selectedPlace: StateFlow<VisitedPlace?> = _selectedPlace.asStateFlow()
+
+    fun selectPlace(place: VisitedPlace?) {
+        _selectedPlace.value = place
+    }
+
+    fun addImage(id: Int, image: String) {
+        viewModelScope.launch {
+            visitedPlaceRepository.addImage(id, image)
+        }
+    }
+
+    // Camera
+    private val _statusCamera = MutableStateFlow(false)
+    val statusCamera: StateFlow<Boolean> = _statusCamera.asStateFlow()
+
+    fun openCamera() {
+        _statusCamera.value = true
+    }
+
+    fun closeCamera() {
+        _statusCamera.value = false
+    }
+
     // GPS
+    private val SANTIAGO = LatLng(-33.4489, -70.6693)
     var location: StateFlow<LocationData?> = locationRepository.location
         .stateIn(
             scope = viewModelScope,
@@ -39,10 +66,10 @@ class PlacesViewModel (
         )
 
     // Map
-    val _mapCenterPosition: MutableStateFlow<LatLng> = MutableStateFlow(LatLng(0.0, 0.0))
+    private val _mapCenterPosition: MutableStateFlow<LatLng> = MutableStateFlow(SANTIAGO)
     val mapCenterPosition: StateFlow<LatLng> = _mapCenterPosition.asStateFlow()
 
-    val _mapCameraPosition: MutableStateFlow<CameraPosition> = MutableStateFlow(CameraPosition.fromLatLngZoom(
+    private val _mapCameraPosition: MutableStateFlow<CameraPosition> = MutableStateFlow(CameraPosition.fromLatLngZoom(
         mapCenterPosition.value,
         15f
     ))

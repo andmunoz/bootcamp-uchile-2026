@@ -4,6 +4,7 @@ data class VisitedPlace(
     val id: Int = 0,
     val nombre: String,
     val descripcion: String,
+    var imagen: String?,
     val fecha: String,
     val latitud: Double,
     val longitud: Double,

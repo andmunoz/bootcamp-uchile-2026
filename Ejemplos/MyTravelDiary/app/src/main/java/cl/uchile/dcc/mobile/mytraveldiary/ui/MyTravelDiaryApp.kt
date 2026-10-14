@@ -1,7 +1,6 @@
 package cl.uchile.dcc.mobile.mytraveldiary.ui
 
 import android.Manifest
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,6 +23,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import cl.uchile.dcc.mobile.mytraveldiary.ui.components.CameraPreview
+import cl.uchile.dcc.mobile.mytraveldiary.ui.components.VisitPage
 import cl.uchile.dcc.mobile.mytraveldiary.viewmodel.PlacesViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -32,6 +33,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberUpdatedMarkerState
+import kotlin.math.abs
 
 @Composable
 fun MyTravelDiaryApp(
@@ -39,7 +41,7 @@ fun MyTravelDiaryApp(
     modifier: Modifier = Modifier
 ) {
     val places = viewModel.visitedPlaces
-
+    var selectedPlace = viewModel.selectedPlace.collectAsState()
     val context = LocalContext.current
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -58,24 +60,32 @@ fun MyTravelDiaryApp(
         }
     }
 
-    val location by viewModel.location.collectAsState()
-    val coordinates by viewModel.mapCenterPosition.collectAsState()
-
-    val accelerometer by viewModel.accelerometer.collectAsState()
-    val gyroscopeData by viewModel.gyroscope.collectAsState()
-
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
-            coordinates,
+            LatLng(0.0, 0.0),
             15f
         )
+    }
+
+    val location by viewModel.location.collectAsState()
+    LaunchedEffect(location) {
+        location?.let { loc ->
+            if (loc.latitude != 0.0 && loc.longitude != 0.0) {
+                cameraPositionState.animate(
+                    CameraUpdateFactory.newLatLngZoom(
+                        LatLng(loc.latitude, loc.longitude),
+                        15f
+                    )
+                )
+            }
+        }
     }
 
     val rotationVector by viewModel.rotationVector.collectAsState()
     val azimut = rotationVector.azimut
     LaunchedEffect(azimut) {
         val actualBearing = cameraPositionState.position.bearing
-        if (Math.abs(azimut - actualBearing) > 1f) {
+        if (abs(azimut - actualBearing) > 1f) {
             val actualCameraPosition = cameraPositionState.position
             cameraPositionState.animate(
                 update = CameraUpdateFactory.newCameraPosition(
@@ -90,12 +100,24 @@ fun MyTravelDiaryApp(
         }
     }
 
+    val statusCamera = viewModel.statusCamera.collectAsState()
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
             Text(text = "My Travel Diary")
         }
     ) { paddingValues ->
+        if (statusCamera.value && selectedPlace.value != null) {
+            CameraPreview(
+                onImageCaptured = {
+                    viewModel.addImage(selectedPlace.value!!.id, it.absolutePath)
+                    viewModel.closeCamera()
+                }
+            )
+            return@Scaffold
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -147,11 +169,17 @@ fun MyTravelDiaryApp(
                         title = visit.nombre,
                         snippet = "[${visit.fecha}] ${visit.descripcion} (${visit.orden})",
                         onClick = {
-                            // TODO: Handle marker click
-                            false
+                            viewModel.selectPlace(visit)
+                            true // false: mostrar el snipper, true: no mostrar el snippen
                         }
                     )
                 }
+            }
+            if (selectedPlace.value != null) {
+                VisitPage(
+                    viewModel = viewModel,
+                    visitedPlace = selectedPlace.value!!
+                )
             }
         }
     }
