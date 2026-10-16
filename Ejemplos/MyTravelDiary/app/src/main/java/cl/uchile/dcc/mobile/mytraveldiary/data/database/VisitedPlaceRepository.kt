@@ -10,6 +10,8 @@ class VisitedPlaceRepository {
 
     fun getPlaces(): List<VisitedPlace> = visitedPlaces
 
+    fun getPlace(id: Int): VisitedPlace? = visitedPlaces.find { it.id == id }
+
     fun addImage(id: Int, image: String) {
         visitedPlaces.find { it.id == id }?.imagen = image
     }

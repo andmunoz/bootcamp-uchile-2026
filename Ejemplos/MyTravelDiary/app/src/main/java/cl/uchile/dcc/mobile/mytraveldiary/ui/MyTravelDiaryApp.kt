@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material.icons.filled.NetworkCheck
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -137,6 +138,12 @@ fun MyTravelDiaryApp(
                 ) {
                     Icon(
                         imageVector = Icons.Default.MyLocation,
+                        contentDescription = "Mi Ubicación"
+                    )
+                }
+                if (viewModel.hasConnection()) {
+                    Icon(
+                        imageVector = Icons.Default.NetworkCheck,
                         contentDescription = "Mi Ubicación"
                     )
                 }

@@ -5,10 +5,12 @@ import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cl.uchile.dcc.mobile.mytraveldiary.data.connectivity.ConnectivityRepository
 import cl.uchile.dcc.mobile.mytraveldiary.data.database.VisitedPlace
 import cl.uchile.dcc.mobile.mytraveldiary.data.database.VisitedPlaceRepository
 import cl.uchile.dcc.mobile.mytraveldiary.data.location.LocationData
 import cl.uchile.dcc.mobile.mytraveldiary.data.location.LocationRepository
+import cl.uchile.dcc.mobile.mytraveldiary.data.notifications.NotificationRepository
 import cl.uchile.dcc.mobile.mytraveldiary.data.sensors.AccelerometerData
 import cl.uchile.dcc.mobile.mytraveldiary.data.sensors.GyroscopeData
 import cl.uchile.dcc.mobile.mytraveldiary.data.sensors.RotationVectorData
@@ -26,8 +28,18 @@ import kotlinx.coroutines.launch
 class PlacesViewModel (
     private val visitedPlaceRepository: VisitedPlaceRepository,
     private val locationRepository: LocationRepository,
-    private val sensorsRepository: SensorsRepository
+    private val sensorsRepository: SensorsRepository,
+    private val notificationRepository: NotificationRepository,
+    private val connectivityRepository: ConnectivityRepository
 ) : ViewModel() {
+    // Constructor de la clase PlacesViewModel
+    init {
+        notificationRepository.createChannels()
+    }
+
+    // Connectivity
+    fun hasConnection(): Boolean = connectivityRepository.hasConnection()
+
     // Markers
     val visitedPlaces = visitedPlaceRepository.getPlaces()
 
@@ -39,8 +51,14 @@ class PlacesViewModel (
     }
 
     fun addImage(id: Int, image: String) {
-        viewModelScope.launch {
+        viewModelScope.launch @androidx.annotation.RequiresPermission(android.Manifest.permission.POST_NOTIFICATIONS) {
             visitedPlaceRepository.addImage(id, image)
+            val place = visitedPlaceRepository.getPlace(id)
+            Log.d("PlacesViewModel", "Imagen agregada a la visita $id: $image")
+            if (place != null) {
+                Log.d("PlacesViewModel", "Enviando notificación de visita: ${place.nombre}")
+                notificationRepository.sendVisitNotification(place)
+            }
         }
     }
 

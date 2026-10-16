@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import cl.uchile.dcc.mobile.mytraveldiary.data.connectivity.ConnectivityRepository
 import cl.uchile.dcc.mobile.mytraveldiary.data.database.VisitedPlaceRepository
 import cl.uchile.dcc.mobile.mytraveldiary.data.location.LocationRepository
+import cl.uchile.dcc.mobile.mytraveldiary.data.notifications.NotificationRepository
 import cl.uchile.dcc.mobile.mytraveldiary.data.sensors.SensorsRepository
 import cl.uchile.dcc.mobile.mytraveldiary.ui.MyTravelDiaryApp
 import cl.uchile.dcc.mobile.mytraveldiary.ui.theme.MyTravelDiaryTheme
@@ -27,11 +29,15 @@ class MainActivity : ComponentActivity() {
         val visitsRepository = VisitedPlaceRepository()
         val locationRepository = LocationRepository(this)
         val sensorsRepository = SensorsRepository(this)
+        val notificationRepository = NotificationRepository(this)
+        val connectivityRepository = ConnectivityRepository(this)
 
         viewModel = PlacesViewModel(
             visitsRepository,
             locationRepository,
-            sensorsRepository)
+            sensorsRepository,
+            notificationRepository,
+            connectivityRepository)
 
         setContent {
             MyTravelDiaryTheme {
