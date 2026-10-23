@@ -1,7 +1,7 @@
-package cl.uchile.dcc.mobile.mynotes.data
+package cl.uchile.dcc.mobile.mynotes.data.notes.api
 
-data class Note(
-    val id: Long?,
+data class NoteDTO(
+    val id: Long,
     val title: String,
     val content: String,
     val colorHex: Long,
