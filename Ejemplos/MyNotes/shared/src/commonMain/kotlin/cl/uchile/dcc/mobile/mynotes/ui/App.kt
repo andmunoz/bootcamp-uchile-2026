@@ -6,16 +6,17 @@ import cl.uchile.dcc.mobile.mynotes.data.notes.NoteRepository
 import cl.uchile.dcc.mobile.mynotes.data.notes.api.NoteAPI
 import cl.uchile.dcc.mobile.mynotes.data.notes.api.createHttpClient
 import cl.uchile.dcc.mobile.mynotes.data.notes.database.NoteDatabase
+import cl.uchile.dcc.mobile.mynotes.data.notes.database.DriverFactory
 
 @Composable
 fun App(
-    repository: NoteRepository = NoteRepository(
-        noteDatabase = NoteDatabase(),
-        noteAPI = NoteAPI(
-            client = createHttpClient(NoteAPI.baseUrl)
-        )
-    )
+    driverFactory: DriverFactory,
 ) {
+    val httpClient = createHttpClient(NoteAPI.baseUrl)
+    val repository = NoteRepository(
+        noteDatabase = NoteDatabase(driverFactory = driverFactory),
+        noteAPI = NoteAPI(client = httpClient)
+    )
     MaterialTheme {
         MainScreen(repository)
     }

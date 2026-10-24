@@ -1,9 +1,9 @@
 package cl.uchile.dcc.mobile.mynotes.data.notes.api
 
-import cl.uchile.dcc.mobile.mynotes.data.notes.database.Note
+import cl.uchile.dcc.mobile.mynotes.data.notes.database.NoteDAO
 
-fun NoteDTO.toNote(): Note {
-    return Note(
+fun NoteDTO.toNote(): NoteDAO {
+    return NoteDAO(
             id = this.id,
             title = this.title,
             content = this.content,
@@ -12,7 +12,7 @@ fun NoteDTO.toNote(): Note {
         )
 }
 
-fun Note.toNoteDTO(): NoteDTO {
+fun NoteDAO.toNoteDTO(): NoteDTO {
     return NoteDTO(
             id = this.id!!,
             title = this.title,

@@ -6,7 +6,8 @@ import cl.uchile.dcc.mobile.mynotes.ui.App
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
+    val driverFactory = DriverFactory()
     ComposeViewport {
-        App()
+        App(driverFactory)
     }
 }

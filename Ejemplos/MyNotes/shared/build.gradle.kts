@@ -72,6 +72,9 @@ kotlin {
         }
         jsMain.dependencies {
             implementation(libs.wrappers.browser)
+            implementation(libs.sqldelight.web.worker.driver)
+            implementation(libs.sqljs)
+            implementation(libs.sqldelight.sqljs.worker)
         }
         jvmMain.dependencies {
             implementation(libs.kotlinx.coroutinesSwing)
@@ -89,6 +92,7 @@ sqldelight {
     databases {
         create("NoteDB") {
             packageName = "cl.uchile.dcc.mobile.mynotes.data.notes.database"
+            generateAsync.set(true)
         }
     }
 }

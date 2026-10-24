@@ -17,6 +17,9 @@ kotlinx-coroutines = "1.11.0"
 material3 = "1.12.0-alpha03"
 ktor = "3.6.0"
 sqldelight = "2.4.1"
+webWorkerDriver = "2.1.0"
+sqlJs = "1.12.0"
+sqldelightSqljsWorker = "2.1.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -50,6 +53,9 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "k
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 sqldelight-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
 sqldelight-sqlite = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
+sqldelight-web-worker-driver = { module = "app.cash.sqldelight:webworker-driver", version.ref = "webWorkerDriver" }
+sqljs = { module = "org.sqljs:sqljs-wasm", version.ref = "sqlJs" }
+sqldelight-sqljs-worker = { module = "app.cash.sqldelight:sqljs-worker", version.ref = "sqldelightSqljsWorker" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
