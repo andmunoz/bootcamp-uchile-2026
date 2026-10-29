@@ -1,6 +1,6 @@
 package cl.uchile.dcc.mobile.mynotes.data.notes.database
 
-class NoteDatabase(
+open class NoteDatabase(
     private val driverFactory: DriverFactory
 ) {
     private val nodeDB = NoteDB(driverFactory.createDriver())

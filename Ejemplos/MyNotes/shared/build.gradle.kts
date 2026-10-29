@@ -59,6 +59,14 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
+            implementation(libs.koin.core)
+            implementation(libs.koin.core.viewmodel)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.sqldelight.async.extensions)
+            implementation(libs.material3.windowSizeClass)
+        }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
         }
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
@@ -66,6 +74,7 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.ktor.client.android)
             implementation(libs.sqldelight.android)
+            implementation(libs.koin.android)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -73,13 +82,17 @@ kotlin {
         jsMain.dependencies {
             implementation(libs.wrappers.browser)
             implementation(libs.sqldelight.web.worker.driver)
-            implementation(libs.sqljs)
-            implementation(libs.sqldelight.sqljs.worker)
+            implementation(npm("sql.js", "1.8.0")) // O la versión que prefieras
+            implementation(npm("@cashapp/sqldelight-sqljs-worker", "2.1.0"))
         }
         jvmMain.dependencies {
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.ktor.client.cio)
             implementation(libs.sqldelight.sqlite)
+        }
+        jvmTest.dependencies {
+            implementation(libs.kotlin.testJunit)
+            implementation(libs.junit)
         }
     }
 }
