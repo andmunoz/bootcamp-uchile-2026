@@ -14,8 +14,6 @@ import cl.uchile.dcc.mobile.mynotes.data.notes.api.NoteAPI
 import cl.uchile.dcc.mobile.mynotes.data.notes.api.createHttpClient
 import cl.uchile.dcc.mobile.mynotes.data.notes.database.DriverFactory
 import cl.uchile.dcc.mobile.mynotes.data.notes.database.NoteDatabase
-import cl.uchile.dcc.mobile.mynotes.di.appModule
-import cl.uchile.dcc.mobile.mynotes.viewmodel.NotesViewModel
 
 @Composable
 fun App(driverFactory: DriverFactory) {
