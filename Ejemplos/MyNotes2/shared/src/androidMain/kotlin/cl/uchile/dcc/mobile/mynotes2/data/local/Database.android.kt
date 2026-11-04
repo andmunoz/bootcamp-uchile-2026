@@ -8,5 +8,5 @@ fun getDatabaseBuilder(context: Context): RoomDatabase.Builder<NoteDatabase> {
     return Room.databaseBuilder<NoteDatabase>(
         context = context,
         name = "my_notes.db"
-    )
+    ).fallbackToDestructiveMigration(true)
 }

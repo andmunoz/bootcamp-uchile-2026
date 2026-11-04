@@ -18,7 +18,7 @@ kotlin {
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
         androidResources {
             enable = true
@@ -50,12 +50,16 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.material3.windowSizeClass)
+            implementation(libs.play.services.kotlin.coroutines)
+            implementation(libs.coil.compose)
+            implementation(libs.kermit)
         }
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.uiTooling)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.android)
+            implementation(libs.play.services.location)
         }
         jvmMain.dependencies {
             implementation(libs.ktor.client.cio)

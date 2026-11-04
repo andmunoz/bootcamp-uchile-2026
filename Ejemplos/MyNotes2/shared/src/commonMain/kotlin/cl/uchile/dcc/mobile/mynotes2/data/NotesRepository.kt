@@ -21,6 +21,10 @@ class NotesRepository(
         }
     }
 
+    suspend fun getNote(id: Int): Note {
+        return noteDatabase.noteDao.getNote(id).toNote()
+    }
+
     // SYNCRONIZE CON LA API
     fun syncNotes() {
         TODO("Not yet implemented")

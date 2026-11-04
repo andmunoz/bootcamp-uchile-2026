@@ -3,7 +3,7 @@
 package cl.uchile.dcc.mobile.mynotes2.data.local
 
 import androidx.room3.RoomDatabaseConstructor
-@Suppress("KotlinNoActualForExpect")
+@Suppress("KotlinNo ActualForExpect")
 expect object NoteDatabaseConstructor :
     RoomDatabaseConstructor<NoteDatabase> {
     override fun initialize(): NoteDatabase

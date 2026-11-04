@@ -8,5 +8,5 @@ fun getDatabaseBuilder(): RoomDatabase.Builder<NoteDatabase> {
     val dbFile = File(System.getProperty("java.io.tmpdir"), "my_room.db")
     return Room.databaseBuilder<NoteDatabase>(
         name = dbFile.absolutePath,
-    )
+    ).fallbackToDestructiveMigration(true)
 }
