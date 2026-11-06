@@ -1,10 +1,8 @@
 package cl.uchile.dcc.mobile.mynotes2
 
 import cl.uchile.dcc.mobile.mynotes2.data.Note
-import cl.uchile.dcc.mobile.mynotes2.data.NotesRepository
 import cl.uchile.dcc.mobile.mynotes2.data.location.LocationData
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -20,12 +18,14 @@ class NoteRepositoryFake (
         // eliminar
     }
 
-    fun getNotes(): Flow<List<Note>> {
+    fun getNotes(): Flow<List<Note>>? {
+        return null
         // return StateFlow(noteDatabase)
     }
 
-    suspend fun getNote(id: Int): Note {
+    fun getNote(id: Int): Note? {
         // return noteDatabase.noteDao.getNote(id).toNote()
+        return null
     }
 
     // SYNCRONIZE CON LA API
