@@ -15,5 +15,6 @@ class ComposeUITest {
         // composeTestRule.onNodeWithText("My Note").assertIsDisplayed()
 
         // ASERT
+        val a = 2
     }
 }
