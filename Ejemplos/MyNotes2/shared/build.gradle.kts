@@ -53,6 +53,7 @@ kotlin {
             implementation(libs.play.services.kotlin.coroutines)
             implementation(libs.coil.compose)
             implementation(libs.kermit)
+            implementation(libs.androidx.compose.rules)
         }
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
