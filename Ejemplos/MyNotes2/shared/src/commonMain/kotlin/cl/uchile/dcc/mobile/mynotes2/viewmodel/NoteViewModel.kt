@@ -6,9 +6,12 @@ import cl.uchile.dcc.mobile.mynotes2.data.Note
 import cl.uchile.dcc.mobile.mynotes2.data.NotesRepository
 import cl.uchile.dcc.mobile.mynotes2.data.location.LocationData
 import cl.uchile.dcc.mobile.mynotes2.data.location.LocationProvider
+import cl.uchile.dcc.mobile.mynotes2.data.util.getRandomColor
 import co.touchlab.kermit.Logger
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -45,7 +48,7 @@ class NoteViewModel(
             val note = Note(
                 title = title,
                 content = content,
-                colorHex = 0L,
+                colorHex = getRandomColor(),
                 location = locationData,
                 picturePath = picturePath
             )
@@ -73,5 +76,13 @@ class NoteViewModel(
         viewModelScope.launch {
             notesRepository.removeNote(note)
         }
+    }
+
+    private val _selectedNote = MutableStateFlow<Note?>(null)
+    val selectedNote: StateFlow<Note?> = _selectedNote.asStateFlow()
+
+    // 👇 NUEVO: Función para actualizar la nota seleccionada
+    fun selectNote(note: Note?) {
+        _selectedNote.value = note
     }
 }

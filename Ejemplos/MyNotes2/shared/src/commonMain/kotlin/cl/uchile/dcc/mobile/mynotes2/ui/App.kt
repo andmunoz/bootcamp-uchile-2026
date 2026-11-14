@@ -20,13 +20,6 @@ import org.koin.compose.viewmodel.koinViewModel
 fun App() {
     val viewModel = koinViewModel<NoteViewModel>()
     val uiState by viewModel.uiState.collectAsState()
-    val cameraHandler = rememberCameraHandler()
-    var hasLocationPermission = false
-    GetLocationPermission(
-        onLocationGranted = {
-            hasLocationPermission = true
-        }
-    )
 
     MaterialTheme {
         Surface(
@@ -57,26 +50,7 @@ fun App() {
                 is NoteUiState.Success -> {
                     NoteScreen(
                         notes = state.notes,
-                        onAddNote = {
-                            cameraHandler.takePicture(
-                                onSuccess = { path ->
-                                    viewModel.addNote(
-                                        "Nueva Nota",
-                                        "Contenido de prueba",
-                                        hasLocationPermission,
-                                        path
-                                    )
-                                },
-                                onError = { error ->
-                                    viewModel.addNote(
-                                        "Nueva Nota",
-                                        "Contenido de prueba",
-                                        hasLocationPermission,
-                                        null
-                                    )
-                                }
-                            )
-                        }
+                        viewModel = viewModel
                     )
                 }
             }

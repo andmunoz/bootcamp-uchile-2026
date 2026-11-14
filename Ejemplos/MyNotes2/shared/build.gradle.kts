@@ -39,6 +39,7 @@ kotlin {
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.uiToolingPreview)
+            implementation(libs.compose.materialExtended)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.androidx.room3.runtime)
@@ -53,7 +54,7 @@ kotlin {
             implementation(libs.play.services.kotlin.coroutines)
             implementation(libs.coil.compose)
             implementation(libs.kermit)
-            implementation(libs.androidx.compose.rules)
+            implementation(libs.material3.adaptative)
         }
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
