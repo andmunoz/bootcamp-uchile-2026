@@ -14,7 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cl.uchile.dcc.mobile.mynotes2.data.Note
-import java.util.Date
+import cl.uchile.dcc.mobile.mynotes2.data.util.PictureSize
+import cl.uchile.dcc.mobile.mynotes2.data.util.getLocalDateTimeFormat
 
 @Composable
 fun NoteOverview(
@@ -28,7 +29,8 @@ fun NoteOverview(
         colors = CardDefaults.cardColors(
             containerColor = Color(note.colorHex)
         ),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
     ) {
         Row(
             modifier = Modifier.fillMaxWidth()
@@ -37,13 +39,14 @@ fun NoteOverview(
                 modifier = Modifier
                     .padding(16.dp)
                     .weight(3f)
+                    .fillMaxWidth()
             ) {
                 Text(
                     text = note.title,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = "${Date(note.created)}",
+                    text = note.created.getLocalDateTimeFormat(),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -54,7 +57,7 @@ fun NoteOverview(
             ) {
                 PictureHandler(
                     picture = note.picturePath,
-                    size = 60.dp
+                    size = PictureSize.THUMBNAIL.size
                 )
             }
         }

@@ -2,6 +2,7 @@ package cl.uchile.dcc.mobile.mynotes2.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -17,7 +18,9 @@ fun NoteList(
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp, 0.dp)
     ) {
         items(notes) { note ->
             NoteOverview(

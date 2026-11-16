@@ -55,6 +55,7 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.kermit)
             implementation(libs.material3.adaptative)
+            implementation(libs.kotlinx.datetime)
         }
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)

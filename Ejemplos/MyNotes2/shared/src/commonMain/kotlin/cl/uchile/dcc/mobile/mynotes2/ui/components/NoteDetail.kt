@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cl.uchile.dcc.mobile.mynotes2.data.Note
+import cl.uchile.dcc.mobile.mynotes2.data.util.PictureSize
+import cl.uchile.dcc.mobile.mynotes2.data.util.getLocalDateTimeFormat
 import java.util.Date
 
 @Composable
@@ -48,11 +50,11 @@ fun NoteDetail(
                 ) {
                     PictureHandler(
                         picture = note.picturePath,
-                        size = 180.dp
+                        size = PictureSize.NORMALSIZE.size
                     )
                 }
                 Text(
-                    text = "${Date(note.created)}",
+                    text = note.created.getLocalDateTimeFormat(),
                     style = MaterialTheme.typography.bodyMedium
                 )
             } else {
