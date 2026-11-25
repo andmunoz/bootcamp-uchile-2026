@@ -27,9 +27,9 @@ fun NoteCreateForm(
 ) {
     var title by remember { mutableStateOf("")}
     var content by remember { mutableStateOf("")}
-    var withPicture by remember { mutableStateOf(true) }
 
     val cameraHandler = rememberCameraHandler()
+    var withPicture by remember { mutableStateOf(cameraHandler.hasCamera) }
 
     Column(
         modifier = Modifier

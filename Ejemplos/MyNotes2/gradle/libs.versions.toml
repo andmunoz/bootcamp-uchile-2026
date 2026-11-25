@@ -28,6 +28,7 @@ playServicesLocation = "21.4.0"
 coil = "3.6.3"
 kermit = "2.2.0"
 kotlinxDatetime = "0.8.0"
+sqldelight = "2.4.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -72,6 +73,8 @@ coil-compose = { group = "io.coil-kt.coil3", name="coil-compose", version.ref="c
 coil-network-ktor = { group = "io.coil-kt.coil3", name="coil-network-ktor", version.ref="coil" }
 kermit = { group = "co.touchlab", name="kermit", version.ref = "kermit" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+sqldelight-driver = { group = "app.cash.sqldelight", name = "sqlite-driver", version.ref = "sqldelight" }
+sqldelight-coroutines-extensions = { group = "app.cash.sqldelight", name = "coroutines-extensiones", version.ref = "sqldelight" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

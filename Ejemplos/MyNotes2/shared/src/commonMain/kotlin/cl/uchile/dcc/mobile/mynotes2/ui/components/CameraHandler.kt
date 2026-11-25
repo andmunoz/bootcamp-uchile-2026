@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 expect class CameraHandler {
+    val hasCamera: Boolean
     fun takePicture(
         onSuccess: (String) -> Unit,
         onError: (String) -> Unit

@@ -27,6 +27,8 @@ actual class CameraHandler(
     private var onSuccessCallback: ((String) -> Unit)? = null
     private var onErrorCallback: ((String) -> Unit)? = null
 
+    actual val hasCamera = true
+
     fun onResult(bitmap: Bitmap?) {
         if (bitmap != null) {
             val savedPicture = saveBitmapToInternalStorage(bitmap)

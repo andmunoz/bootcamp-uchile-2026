@@ -1,12 +1,16 @@
 package cl.uchile.dcc.mobile.mynotes2.ui.screens
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -44,6 +48,12 @@ fun NoteScreen(
                 WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND     // 600.dp
             )
     )
+    var leftSize = 1f
+    var rightSize = 1f
+    if (isNotCompact) {
+        leftSize = 0.3f
+        rightSize = 0.7f
+    }
 
     var hasLocationPermission = false
     GetLocationPermission(
@@ -92,27 +102,35 @@ fun NoteScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            if ((selectedNote == null && !newNote) || isNotCompact) {
-                NoteList(
-                    notes = notes,
-                    viewModel = viewModel
-                )
-            }
-            if (newNote) {
-                viewModel.selectNote(null)
-                NoteCreateForm { title, content, picturePath ->
-                    viewModel.addNote(
-                        title,
-                        content,
-                        hasLocationPermission,
-                        picturePath
+            Box(
+                modifier = Modifier
+                    .padding(8.dp, 0.dp)
+                    .weight(leftSize)
+            ){
+                if ((selectedNote == null && !newNote) || isNotCompact) {
+                    NoteList(
+                        notes = notes,
+                        viewModel = viewModel
                     )
-                    newNote = false
                 }
-            } else if (selectedNote != null || isNotCompact) {
-                Box(
-                    modifier = Modifier.padding(8.dp, 0.dp)
-                ) {
+            }
+            Box(
+                modifier = Modifier
+                    .padding(8.dp, 0.dp)
+                    .weight(rightSize)
+            ){
+                if (newNote) {
+                    viewModel.selectNote(null)
+                    NoteCreateForm { title, content, picturePath ->
+                        viewModel.addNote(
+                            title,
+                            content,
+                            hasLocationPermission,
+                            picturePath
+                        )
+                        newNote = false
+                    }
+                } else if (selectedNote != null || isNotCompact) {
                     NoteDetail(selectedNote)
                 }
             }
