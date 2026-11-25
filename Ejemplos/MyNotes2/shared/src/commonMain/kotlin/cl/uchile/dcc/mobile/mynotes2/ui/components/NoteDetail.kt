@@ -19,11 +19,11 @@ import java.util.Date
 
 @Composable
 fun NoteDetail(
-    note: Note?
+    note: Note
 ) {
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = Color(note?.colorHex ?: 0xFFF5F5F5) // Usa el valor que viene de la base de datos
+            containerColor = Color(note.colorHex ?: 0xFFF5F5F5) // Usa el valor que viene de la base de datos
         ),
         modifier = Modifier.fillMaxSize()
     ) {
@@ -31,35 +31,31 @@ fun NoteDetail(
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            if (note != null) {
-                Text(
-                    text = note.title,
-                    style = MaterialTheme.typography.titleMedium
+            Text(
+                text = note.title,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = note.content,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = "Ubicación: ${note.location?.latitude}, ${note.location?.longitude}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Box(
+                modifier = Modifier
+                    .padding(16.dp)
+            ) {
+                PictureHandler(
+                    picture = note.picturePath,
+                    size = PictureSize.NORMALSIZE.size
                 )
-                Text(
-                    text = note.content,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                    text = "Ubicación: ${note.location?.latitude}, ${note.location?.longitude}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Box(
-                    modifier = Modifier
-                        .padding(16.dp)
-                ) {
-                    PictureHandler(
-                        picture = note.picturePath,
-                        size = PictureSize.NORMALSIZE.size
-                    )
-                }
-                Text(
-                    text = note.created.getLocalDateTimeFormat(),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            } else {
-                Text("Seleccione una nota para ver el detalle")
             }
+            Text(
+                text = note.created.getLocalDateTimeFormat(),
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 }

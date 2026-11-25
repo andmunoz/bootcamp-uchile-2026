@@ -14,7 +14,7 @@ import cl.uchile.dcc.mobile.mynotes2.viewmodel.NoteViewModel
 @Composable
 fun NoteList(
     notes: List<Note>,
-    viewModel: NoteViewModel
+    onNoteClick: (Note) -> Unit
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -26,7 +26,7 @@ fun NoteList(
             NoteOverview(
                 note = note,
                 onClickNote = {
-                    viewModel.selectNote(note)
+                    onNoteClick(note)
                 }
             )
         }

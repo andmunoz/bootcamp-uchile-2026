@@ -25,13 +25,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cl.uchile.dcc.mobile.mynotes2.data.Note
 import cl.uchile.dcc.mobile.mynotes2.ui.components.GetLocationPermission
 import cl.uchile.dcc.mobile.mynotes2.ui.components.NoteCreateForm
 import cl.uchile.dcc.mobile.mynotes2.ui.components.NoteDetail
 import cl.uchile.dcc.mobile.mynotes2.ui.components.NoteList
+import cl.uchile.dcc.mobile.mynotes2.viewmodel.NoteScreenMode
 import cl.uchile.dcc.mobile.mynotes2.viewmodel.NoteViewModel
 
 @Composable
@@ -40,7 +43,7 @@ fun NoteScreen(
     viewModel: NoteViewModel
 ) {
     val windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass
-    val isNotCompact = (
+    val isMobileSize = !(
             windowSizeClass.isWidthAtLeastBreakpoint(
                 WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND   // 840.dp
             ) ||
@@ -48,12 +51,11 @@ fun NoteScreen(
                 WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND     // 600.dp
             )
     )
-    var leftSize = 1f
-    var rightSize = 1f
-    if (isNotCompact) {
-        leftSize = 0.3f
-        rightSize = 0.7f
-    }
+
+    val screenMode by viewModel.screenMode.collectAsState()
+
+    val leftSize = if (!isMobileSize) 0.3f else 1f
+    val rightSize = if (!isMobileSize) 0.7f else 1f
 
     var hasLocationPermission = false
     GetLocationPermission(
@@ -62,25 +64,21 @@ fun NoteScreen(
         }
     )
 
-    var newNote by remember { mutableStateOf(false) }
-    val selectedNote by viewModel.selectedNote.collectAsState()
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    val title = if (selectedNote != null && !isNotCompact)
-                        "Nota: ${selectedNote!!.title}"
-                    else if (newNote && !isNotCompact)
-                        "Nueva Nota"
-                    else
-                        "Mis Notas"
+                    val title = when (screenMode) {
+                        is NoteScreenMode.List -> "Mis Notas"
+                        is NoteScreenMode.Create -> "Nueva Nota"
+                        is NoteScreenMode.Detail -> "Nota: ${(screenMode as NoteScreenMode.Detail).note.title}"
+                    }
                     Text(title)
                 },
                 navigationIcon = {
                     // Si estamos en Compact y hay una nota seleccionada, mostramos botón "Volver"
-                    if (selectedNote != null && !isNotCompact) {
-                        IconButton(onClick = { viewModel.selectNote(null) }) {
+                    if (isMobileSize && screenMode !is NoteScreenMode.List) {
+                        IconButton(onClick = { viewModel.showList() }) {
                             Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
                         }
                     }
@@ -88,12 +86,10 @@ fun NoteScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    newNote = true
+            if (screenMode is NoteScreenMode.List || !isMobileSize && screenMode is NoteScreenMode.Detail) {
+                FloatingActionButton(onClick = { viewModel.showCreate() }) {
+                    Icon(Icons.Default.Add, contentDescription = "Agregar Nota")
                 }
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "Agregar Nota")
             }
         }
     ) { innerPadding ->
@@ -102,36 +98,50 @@ fun NoteScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            Box(
-                modifier = Modifier
-                    .padding(8.dp, 0.dp)
-                    .weight(leftSize)
-            ){
-                if ((selectedNote == null && !newNote) || isNotCompact) {
+            if (isMobileSize && screenMode is NoteScreenMode.List || !isMobileSize) {
+                Box(
+                    modifier = Modifier
+                        .padding(8.dp, 4.dp)
+                        .weight(leftSize)
+                ){
                     NoteList(
                         notes = notes,
-                        viewModel = viewModel
+                        onNoteClick = { note -> viewModel.showDetail(note) }
                     )
                 }
             }
-            Box(
-                modifier = Modifier
-                    .padding(8.dp, 0.dp)
-                    .weight(rightSize)
-            ){
-                if (newNote) {
-                    viewModel.selectNote(null)
-                    NoteCreateForm { title, content, picturePath ->
-                        viewModel.addNote(
-                            title,
-                            content,
-                            hasLocationPermission,
-                            picturePath
-                        )
-                        newNote = false
+            if (isMobileSize && screenMode !is NoteScreenMode.List || !isMobileSize) {
+                Box(
+                    modifier = Modifier
+                        .padding(8.dp, 4.dp)
+                        .weight(rightSize)
+                ) {
+                    when (val mode = screenMode) {
+                        is NoteScreenMode.Create -> {
+                            NoteCreateForm(
+                                onSaveNote = { title, content, picturePath ->
+                                    viewModel.addNote(
+                                        title,
+                                        content,
+                                        hasLocationPermission,
+                                        picturePath
+                                    )
+                                    viewModel.showList()
+                                },
+                                onCancelNote = {
+                                    viewModel.showList()
+                                }
+                            )
+                        }
+                        is NoteScreenMode.Detail -> {
+                            NoteDetail(mode.note)
+                        }
+                        is NoteScreenMode.List -> {
+                            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                Text("Selecciona una nota o crea una nueva", color = Color.Gray)
+                            }
+                        }
                     }
-                } else if (selectedNote != null || isNotCompact) {
-                    NoteDetail(selectedNote)
                 }
             }
         }

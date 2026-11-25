@@ -78,11 +78,18 @@ class NoteViewModel(
         }
     }
 
-    private val _selectedNote = MutableStateFlow<Note?>(null)
-    val selectedNote: StateFlow<Note?> = _selectedNote.asStateFlow()
+    private val _screenMode = MutableStateFlow<NoteScreenMode>(NoteScreenMode.List)
+    val screenMode = _screenMode.asStateFlow()
 
-    // 👇 NUEVO: Función para actualizar la nota seleccionada
-    fun selectNote(note: Note?) {
-        _selectedNote.value = note
+    fun showList() {
+        _screenMode.value = NoteScreenMode.List
+    }
+
+    fun showCreate() {
+        _screenMode.value = NoteScreenMode.Create
+    }
+
+    fun showDetail(note: Note) {
+        _screenMode.value = NoteScreenMode.Detail(note)
     }
 }

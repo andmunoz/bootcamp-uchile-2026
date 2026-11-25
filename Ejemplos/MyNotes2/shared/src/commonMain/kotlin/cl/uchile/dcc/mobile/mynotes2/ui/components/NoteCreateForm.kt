@@ -2,10 +2,13 @@ package cl.uchile.dcc.mobile.mynotes2.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -20,10 +23,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import javafx.scene.control.Separator
 
 @Composable
 fun NoteCreateForm(
-    onSaveNote: (title: String, content: String, picturePath: String?) -> Unit
+    onSaveNote: (title: String, content: String, picturePath: String?) -> Unit,
+    onCancelNote: () -> Unit
 ) {
     var title by remember { mutableStateOf("")}
     var content by remember { mutableStateOf("")}
@@ -76,24 +81,37 @@ fun NoteCreateForm(
             )
         }
 
-        Button(
-           onClick = {
-               if (withPicture) {
-                   cameraHandler.takePicture(
-                       onSuccess = { path ->
-                           onSaveNote(title, content, path)
-                       },
-                       onError = { error ->
-                           onSaveNote(title, content, null)
-                       }
-                   )
-               } else {
-                   onSaveNote(title, content, null)
-               }
-           }
+        Row(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Icon(Icons.Default.Save, contentDescription = null)
-            Text("Guardar")
+            Button(
+                onClick = {
+                    if (withPicture) {
+                        cameraHandler.takePicture(
+                            onSuccess = { path ->
+                                onSaveNote(title, content, path)
+                            },
+                            onError = { error ->
+                                onSaveNote(title, content, null)
+                            }
+                        )
+                    } else {
+                        onSaveNote(title, content, null)
+                    }
+                }
+            ) {
+                Icon(Icons.Default.Check, contentDescription = null)
+                Spacer(modifier = Modifier.padding(2.dp))
+                Text("Guardar")
+            }
+            Spacer(modifier = Modifier.padding(4.dp))
+            Button(
+                onClick = { onCancelNote() }
+            ) {
+                Icon(Icons.Default.Close, contentDescription = null)
+                Spacer(modifier = Modifier.padding(2.dp))
+                Text("Cancelar")
+            }
         }
     }
 }

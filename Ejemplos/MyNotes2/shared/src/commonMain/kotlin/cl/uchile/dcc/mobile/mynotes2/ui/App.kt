@@ -9,8 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import cl.uchile.dcc.mobile.mynotes2.ui.components.GetLocationPermission
-import cl.uchile.dcc.mobile.mynotes2.ui.components.rememberCameraHandler
 import cl.uchile.dcc.mobile.mynotes2.ui.screens.NoteScreen
 import cl.uchile.dcc.mobile.mynotes2.viewmodel.NoteUiState
 import cl.uchile.dcc.mobile.mynotes2.viewmodel.NoteViewModel
