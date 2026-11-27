@@ -107,11 +107,14 @@ fun NoteScreen(
             }
         }
     ) { innerPadding ->
+        // Pintamo la pantalla dentro de los márgenes del dispositivo.
         Row(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
+            // La lista de notas se muestra siempre cuando no es teléfono, si no se muestra cuando
+            // estamos en modo List
             if (isMobileSize && screenMode is NoteScreenMode.List || !isMobileSize) {
                 Box(
                     modifier = Modifier
@@ -120,10 +123,15 @@ fun NoteScreen(
                 ){
                     NoteList(
                         notes = notes,
-                        onNoteClick = { note -> viewModel.showDetail(note) }
+                        onNoteClick = { note ->
+                            viewModel.showDetail(note)
+                        }
                     )
                 }
             }
+
+            // A la derecha de la lista cuando no es teléfono se muestra siempre algo, si no, solo
+            // se debe mostrar si no estamos en modo List
             if (isMobileSize && screenMode !is NoteScreenMode.List || !isMobileSize) {
                 Box(
                     modifier = Modifier
@@ -132,6 +140,7 @@ fun NoteScreen(
                 ) {
                     when (val mode = screenMode) {
                         is NoteScreenMode.Create -> {
+                            // Si estamos en modo Create, mostramos el formulario
                             NoteCreateForm(
                                 onSaveNote = { title, content, picturePath ->
                                     viewModel.addNote(
@@ -148,6 +157,7 @@ fun NoteScreen(
                             )
                         }
                         is NoteScreenMode.Detail -> {
+                            // Si estamos en modo Detail, mostramos el detalle de la nota actual
                             NoteDetail(
                                 mode.note,
                                 onShareNote = {
@@ -156,6 +166,8 @@ fun NoteScreen(
                             )
                         }
                         is NoteScreenMode.List -> {
+                            // Si no estamos ni en modo List, solo mostramos un mensaje.
+                            // Este solo aparece si no estamos en un teléfono.
                             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                                 Text("Selecciona una nota o crea una nueva", color = Color.Gray)
                             }

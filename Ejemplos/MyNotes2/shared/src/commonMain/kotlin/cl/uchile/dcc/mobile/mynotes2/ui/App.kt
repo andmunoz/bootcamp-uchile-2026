@@ -17,6 +17,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun App() {
     val viewModel = koinViewModel<NoteViewModel>()
+
+    // Definimos una variable para manejar el estado de la app al abrir
     val uiState by viewModel.uiState.collectAsState()
 
     MaterialTheme {
@@ -25,6 +27,7 @@ fun App() {
         ) {
             when (val state = uiState) {
                 is NoteUiState.Loading -> {
+                    // Si aún estamos "cargando" mostramos un indicador de progreso
                     Box(
                         Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -34,6 +37,7 @@ fun App() {
                 }
 
                 is NoteUiState.Error -> {
+                    // Si ocurrió un error al iniciar, mostramos que hay un error
                     Box(
                         Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -46,6 +50,7 @@ fun App() {
                 }
 
                 is NoteUiState.Success -> {
+                    // Si al iniciar no ocurre nada, entonces pintamos la pantalla principal
                     NoteScreen(
                         notes = state.notes,
                         viewModel = viewModel
