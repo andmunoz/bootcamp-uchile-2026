@@ -4,8 +4,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +23,8 @@ import java.util.Date
 
 @Composable
 fun NoteDetail(
-    note: Note
+    note: Note,
+    onShareNote: (Note) -> Unit
 ) {
     Card(
         colors = CardDefaults.cardColors(
@@ -31,6 +36,13 @@ fun NoteDetail(
             modifier = Modifier
                 .padding(16.dp)
         ) {
+            IconButton(
+                onClick = {
+                    onShareNote(note)
+                }
+            ) {
+                Icon(Icons.Default.Share, contentDescription = "Compartir nota")
+            }
             Text(
                 text = note.title,
                 style = MaterialTheme.typography.titleMedium

@@ -2,6 +2,8 @@ package cl.uchile.dcc.mobile.mynotes2.di
 
 import cl.uchile.dcc.mobile.mynotes2.data.local.getDatabaseBuilder
 import cl.uchile.dcc.mobile.mynotes2.data.location.LocationProvider
+import cl.uchile.dcc.mobile.mynotes2.data.share.AndroidShareManager
+import cl.uchile.dcc.mobile.mynotes2.data.share.ShareManager
 import cl.uchile.dcc.mobile.mynotes2.ui.components.MapHandler
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -17,5 +19,9 @@ val androidPlatformModule = module {
 
     single {
         MapHandler(androidContext())
+    }
+
+    single<ShareManager> {
+        AndroidShareManager(androidContext())
     }
 }

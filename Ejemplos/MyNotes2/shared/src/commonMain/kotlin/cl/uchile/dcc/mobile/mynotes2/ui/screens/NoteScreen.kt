@@ -1,30 +1,27 @@
 package cl.uchile.dcc.mobile.mynotes2.ui.screens
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.window.core.layout.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,6 +39,7 @@ fun NoteScreen(
     notes: List<Note>,
     viewModel: NoteViewModel
 ) {
+    // Calculamos si el tamaño de pantalla corresponde a un teléfono o no
     val windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass
     val isMobileSize = !(
             windowSizeClass.isWidthAtLeastBreakpoint(
@@ -51,12 +49,21 @@ fun NoteScreen(
                 WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND     // 600.dp
             )
     )
-
-    val screenMode by viewModel.screenMode.collectAsState()
-
     val leftSize = if (!isMobileSize) 0.3f else 1f
     val rightSize = if (!isMobileSize) 0.7f else 1f
 
+    // Definimos una variable con el modo de pantalla (List, Detail, Create)
+    val screenMode by viewModel.screenMode.collectAsState()
+
+    // Definimos una variable que nos permita escuchar los eventos a reportar en el snackbar
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(Unit) {
+        viewModel.uiEvents.collect { message ->
+            snackbarHostState.showSnackbar(message)
+        }
+    }
+
+    // Preguntamos si tiene permisos de acceso a la geolocalización
     var hasLocationPermission = false
     GetLocationPermission(
         onLocationGranted = {
@@ -64,10 +71,16 @@ fun NoteScreen(
         }
     )
 
+    // Construimos la pantalla
     Scaffold(
+        snackbarHost = {
+            // Cuando tenemos mensaje que mostrar, lo mostramoss
+            SnackbarHost(hostState = snackbarHostState)
+        },
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
+                    // El título cambia dependiendo del modo de pantalla
                     val title = when (screenMode) {
                         is NoteScreenMode.List -> "Mis Notas"
                         is NoteScreenMode.Create -> "Nueva Nota"
@@ -76,7 +89,7 @@ fun NoteScreen(
                     Text(title)
                 },
                 navigationIcon = {
-                    // Si estamos en Compact y hay una nota seleccionada, mostramos botón "Volver"
+                    // Aparecerá el ícono volver si es que aplica al tipo y modo de pantalla
                     if (isMobileSize && screenMode !is NoteScreenMode.List) {
                         IconButton(onClick = { viewModel.showList() }) {
                             Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
@@ -86,6 +99,7 @@ fun NoteScreen(
             )
         },
         floatingActionButton = {
+            // Incorporamos el botón flotante en caso de que no estemos en el formulario
             if (screenMode is NoteScreenMode.List || !isMobileSize && screenMode is NoteScreenMode.Detail) {
                 FloatingActionButton(onClick = { viewModel.showCreate() }) {
                     Icon(Icons.Default.Add, contentDescription = "Agregar Nota")
@@ -134,7 +148,12 @@ fun NoteScreen(
                             )
                         }
                         is NoteScreenMode.Detail -> {
-                            NoteDetail(mode.note)
+                            NoteDetail(
+                                mode.note,
+                                onShareNote = {
+                                    viewModel.shareNote(mode.note)
+                                }
+                            )
                         }
                         is NoteScreenMode.List -> {
                             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

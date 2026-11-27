@@ -6,11 +6,15 @@ import cl.uchile.dcc.mobile.mynotes2.data.Note
 import cl.uchile.dcc.mobile.mynotes2.data.NotesRepository
 import cl.uchile.dcc.mobile.mynotes2.data.location.LocationData
 import cl.uchile.dcc.mobile.mynotes2.data.location.LocationProvider
+import cl.uchile.dcc.mobile.mynotes2.data.share.ShareManager
 import cl.uchile.dcc.mobile.mynotes2.data.util.getRandomColor
 import co.touchlab.kermit.Logger
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -19,7 +23,8 @@ import kotlinx.coroutines.launch
 
 class NoteViewModel(
     private val notesRepository: NotesRepository,
-    private val locationProvider: LocationProvider
+    private val locationProvider: LocationProvider,
+    private val shareManager: ShareManager
 ): ViewModel() {
     val uiState: StateFlow<NoteUiState> = notesRepository.getNotes()
         .map { note ->
@@ -91,5 +96,15 @@ class NoteViewModel(
 
     fun showDetail(note: Note) {
         _screenMode.value = NoteScreenMode.Detail(note)
+    }
+
+    private val _uiEvents = MutableSharedFlow<String>()
+    val uiEvents: SharedFlow<String> = _uiEvents.asSharedFlow()
+
+    fun shareNote(note: Note) {
+        shareManager.shareTextNote(note)
+        viewModelScope.launch {
+            _uiEvents.emit("Nota copiada al portapapeles")
+        }
     }
 }
