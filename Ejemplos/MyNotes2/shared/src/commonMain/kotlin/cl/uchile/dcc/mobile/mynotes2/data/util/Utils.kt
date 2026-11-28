@@ -2,9 +2,11 @@ package cl.uchile.dcc.mobile.mynotes2.data.util
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.datetime.LocalDateTime
 import kotlin.random.Random
 import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 
 fun getRandomColor(): Long {
@@ -16,7 +18,7 @@ fun Long.getLocalDateTimeFormat(): String {
         .toLocalDateTime(TimeZone.currentSystemDefault())
 
     val dd = dateTime.day.toString().padStart(2, '0')
-    val mm = dateTime.monthNumber.toString().padStart(2, '0')
+    val mm = dateTime.month.number.toString().padStart(2, '0')
     val yyyy = dateTime.year.toString()
     val h = dateTime.hour.toString().padStart(2, '0')
     val m = dateTime.minute.toString().padStart(2, '0')

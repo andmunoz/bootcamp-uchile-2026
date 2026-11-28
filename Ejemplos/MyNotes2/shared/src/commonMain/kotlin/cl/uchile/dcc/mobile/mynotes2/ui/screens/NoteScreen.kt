@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -98,7 +99,7 @@ fun NoteScreen(
                     // Aparecerá el ícono volver si es que aplica al tipo y modo de pantalla
                     if (isMobileSize && currentScreen !is NoteScreenMode.List) {
                         IconButton(onClick = { viewModel.goBack() }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
                         }
                     }
                 }

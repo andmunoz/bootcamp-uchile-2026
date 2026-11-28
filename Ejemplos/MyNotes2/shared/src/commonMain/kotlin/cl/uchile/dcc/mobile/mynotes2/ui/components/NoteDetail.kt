@@ -28,7 +28,7 @@ fun NoteDetail(
 ) {
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = Color(note.colorHex ?: 0xFFF5F5F5) // Usa el valor que viene de la base de datos
+            containerColor = Color(note.colorHex)
         ),
         modifier = Modifier.fillMaxSize()
     ) {
