@@ -52,9 +52,6 @@ fun NoteScreen(
     val leftSize = if (!isMobileSize) 0.3f else 1f
     val rightSize = if (!isMobileSize) 0.7f else 1f
 
-    // Definimos una variable con el modo de pantalla (List, Detail, Create)
-    val screenMode by viewModel.screenMode.collectAsState()
-
     // Definimos una variable que nos permita escuchar los eventos a reportar en el snackbar
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(Unit) {
@@ -71,6 +68,9 @@ fun NoteScreen(
         }
     )
 
+    // Definimos la pantalla actual
+    val currentScreen by viewModel.currentScreen.collectAsState()
+
     // Construimos la pantalla
     Scaffold(
         snackbarHost = {
@@ -81,17 +81,17 @@ fun NoteScreen(
             CenterAlignedTopAppBar(
                 title = {
                     // El título cambia dependiendo del modo de pantalla
-                    val title = when (screenMode) {
+                    val title = when (currentScreen) {
                         is NoteScreenMode.List -> "Mis Notas"
                         is NoteScreenMode.Create -> "Nueva Nota"
-                        is NoteScreenMode.Detail -> "Nota: ${(screenMode as NoteScreenMode.Detail).note.title}"
+                        is NoteScreenMode.Detail -> "Nota: ${(currentScreen as NoteScreenMode.Detail).note.title}"
                     }
                     Text(title)
                 },
                 navigationIcon = {
                     // Aparecerá el ícono volver si es que aplica al tipo y modo de pantalla
-                    if (isMobileSize && screenMode !is NoteScreenMode.List) {
-                        IconButton(onClick = { viewModel.showList() }) {
+                    if (isMobileSize && currentScreen !is NoteScreenMode.List) {
+                        IconButton(onClick = { viewModel.goBack() }) {
                             Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
                         }
                     }
@@ -100,8 +100,8 @@ fun NoteScreen(
         },
         floatingActionButton = {
             // Incorporamos el botón flotante en caso de que no estemos en el formulario
-            if (screenMode is NoteScreenMode.List || !isMobileSize && screenMode is NoteScreenMode.Detail) {
-                FloatingActionButton(onClick = { viewModel.showCreate() }) {
+            if (currentScreen is NoteScreenMode.List || !isMobileSize && currentScreen is NoteScreenMode.Detail) {
+                FloatingActionButton(onClick = { viewModel.navigateTo(NoteScreenMode.Create) }) {
                     Icon(Icons.Default.Add, contentDescription = "Agregar Nota")
                 }
             }
@@ -115,7 +115,7 @@ fun NoteScreen(
         ) {
             // La lista de notas se muestra siempre cuando no es teléfono, si no se muestra cuando
             // estamos en modo List
-            if (isMobileSize && screenMode is NoteScreenMode.List || !isMobileSize) {
+            if (isMobileSize && currentScreen is NoteScreenMode.List || !isMobileSize) {
                 Box(
                     modifier = Modifier
                         .padding(8.dp, 4.dp)
@@ -124,7 +124,7 @@ fun NoteScreen(
                     NoteList(
                         notes = notes,
                         onNoteClick = { note ->
-                            viewModel.showDetail(note)
+                            viewModel.navigateTo(NoteScreenMode.Detail(note))
                         }
                     )
                 }
@@ -132,13 +132,13 @@ fun NoteScreen(
 
             // A la derecha de la lista cuando no es teléfono se muestra siempre algo, si no, solo
             // se debe mostrar si no estamos en modo List
-            if (isMobileSize && screenMode !is NoteScreenMode.List || !isMobileSize) {
+            if (isMobileSize && currentScreen !is NoteScreenMode.List || !isMobileSize) {
                 Box(
                     modifier = Modifier
                         .padding(8.dp, 4.dp)
                         .weight(rightSize)
                 ) {
-                    when (val mode = screenMode) {
+                    when (val mode = currentScreen) {
                         is NoteScreenMode.Create -> {
                             // Si estamos en modo Create, mostramos el formulario
                             NoteCreateForm(
@@ -149,10 +149,10 @@ fun NoteScreen(
                                         hasLocationPermission,
                                         picturePath
                                     )
-                                    viewModel.showList()
+                                    viewModel.navigateTo(NoteScreenMode.List)
                                 },
                                 onCancelNote = {
-                                    viewModel.showList()
+                                    viewModel.goBack()
                                 }
                             )
                         }

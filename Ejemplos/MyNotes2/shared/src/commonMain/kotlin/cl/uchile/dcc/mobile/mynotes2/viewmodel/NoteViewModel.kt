@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class NoteViewModel(
@@ -46,19 +47,32 @@ class NoteViewModel(
         )
 
     // Estados y funciones para gestionar la pantalla en la que se encuentran
-    private val _screenMode = MutableStateFlow<NoteScreenMode>(NoteScreenMode.List)
-    val screenMode = _screenMode.asStateFlow()
+    private val _screenStack = MutableStateFlow<List<NoteScreenMode>>(listOf(NoteScreenMode.List))
+    val currentScreen: StateFlow<NoteScreenMode> = _screenStack
+        .map {
+            it.last()
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            NoteScreenMode.List
+        )
 
-    fun showList() {
-        _screenMode.value = NoteScreenMode.List
+    fun navigateTo(mode: NoteScreenMode) {
+        _screenStack.update {
+            it + mode
+        }
     }
 
-    fun showCreate() {
-        _screenMode.value = NoteScreenMode.Create
+    fun goBack() {
+        _screenStack.update {
+            if (it.size > 1)
+                it.dropLast(1) else it
+        }
     }
 
-    fun showDetail(note: Note) {
-        _screenMode.value = NoteScreenMode.Detail(note)
+    fun resetToRoot() {
+        _screenStack.value = listOf(NoteScreenMode.List)
     }
 
     // Estados que manejan los eventos de la pantalla
