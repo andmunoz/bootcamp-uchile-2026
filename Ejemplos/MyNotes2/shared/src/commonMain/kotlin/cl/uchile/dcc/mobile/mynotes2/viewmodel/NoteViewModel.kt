@@ -26,6 +26,7 @@ class NoteViewModel(
     private val locationProvider: LocationProvider,
     private val shareManager: ShareManager
 ): ViewModel() {
+    // Estados para la carga inicial de la pantalla
     val uiState: StateFlow<NoteUiState> = notesRepository.getNotes()
         .map { note ->
             NoteUiState.Success(note) as NoteUiState
@@ -44,6 +45,27 @@ class NoteViewModel(
             initialValue = NoteUiState.Loading
         )
 
+    // Estados y funciones para gestionar la pantalla en la que se encuentran
+    private val _screenMode = MutableStateFlow<NoteScreenMode>(NoteScreenMode.List)
+    val screenMode = _screenMode.asStateFlow()
+
+    fun showList() {
+        _screenMode.value = NoteScreenMode.List
+    }
+
+    fun showCreate() {
+        _screenMode.value = NoteScreenMode.Create
+    }
+
+    fun showDetail(note: Note) {
+        _screenMode.value = NoteScreenMode.Detail(note)
+    }
+
+    // Estados que manejan los eventos de la pantalla
+    private val _uiEvents = MutableSharedFlow<String>()
+    val uiEvents: SharedFlow<String> = _uiEvents.asSharedFlow()
+
+    // Funciones que definen acciones en las pantallas
     fun addNote(title: String, content: String, locationPermission: Boolean, picturePath: String?) {
         viewModelScope.launch {
             var locationData: LocationData? = null
@@ -83,26 +105,8 @@ class NoteViewModel(
         }
     }
 
-    private val _screenMode = MutableStateFlow<NoteScreenMode>(NoteScreenMode.List)
-    val screenMode = _screenMode.asStateFlow()
-
-    fun showList() {
-        _screenMode.value = NoteScreenMode.List
-    }
-
-    fun showCreate() {
-        _screenMode.value = NoteScreenMode.Create
-    }
-
-    fun showDetail(note: Note) {
-        _screenMode.value = NoteScreenMode.Detail(note)
-    }
-
-    private val _uiEvents = MutableSharedFlow<String>()
-    val uiEvents: SharedFlow<String> = _uiEvents.asSharedFlow()
-
     fun shareNote(note: Note) {
-        shareManager.shareTextNote(note)
+        shareManager.shareNote(note)
         viewModelScope.launch {
             _uiEvents.emit("Nota copiada al portapapeles")
         }
