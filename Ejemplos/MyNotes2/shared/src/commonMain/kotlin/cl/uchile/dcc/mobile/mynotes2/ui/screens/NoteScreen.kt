@@ -31,6 +31,7 @@ import cl.uchile.dcc.mobile.mynotes2.ui.components.GetLocationPermission
 import cl.uchile.dcc.mobile.mynotes2.ui.components.NoteCreateForm
 import cl.uchile.dcc.mobile.mynotes2.ui.components.NoteDetail
 import cl.uchile.dcc.mobile.mynotes2.ui.components.NoteList
+import cl.uchile.dcc.mobile.mynotes2.ui.components.PlatformBackHandler
 import cl.uchile.dcc.mobile.mynotes2.viewmodel.NoteScreenMode
 import cl.uchile.dcc.mobile.mynotes2.viewmodel.NoteViewModel
 
@@ -68,8 +69,13 @@ fun NoteScreen(
         }
     )
 
-    // Definimos la pantalla actual
+    // Definimos la pantalla actual y configuramos el BackStack
     val currentScreen by viewModel.currentScreen.collectAsState()
+    PlatformBackHandler(
+        enabled = currentScreen !is NoteScreenMode.List
+    ) {
+        viewModel.goBack()
+    }
 
     // Construimos la pantalla
     Scaffold(
@@ -149,7 +155,7 @@ fun NoteScreen(
                                         hasLocationPermission,
                                         picturePath
                                     )
-                                    viewModel.navigateTo(NoteScreenMode.List)
+                                    viewModel.goBack()
                                 },
                                 onCancelNote = {
                                     viewModel.goBack()
